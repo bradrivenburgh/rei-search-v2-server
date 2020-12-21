@@ -4,7 +4,7 @@ const { logger } = require('../logger');
 const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
-const { NODE_ENV } = require('./config');
+const { NODE_ENV, CLIENT_ORIGIN } = require('./config');
 
 
 const app = express();
@@ -42,7 +42,9 @@ function errorHandler(error, req, res, next) {
 }
 
 app.use(morgan(morganOption));
-app.use(cors());
+app.use(cors({
+  origin: CLIENT_ORIGIN,
+}));
 app.use(helmet());
 // app.use(express.json()); // Enable if using non-GET endpoints
 // app.use(validateBearerToken); // Enable after adding validation
