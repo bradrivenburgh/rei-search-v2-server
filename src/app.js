@@ -49,8 +49,8 @@ app.use(helmet());
 // Routers can go here
 app.use(errorHandler);
 
-app.get('/', (req, res) => {
-  res.send('Hello, boilerplate!');
+app.get('/api/', (req, res) => {
+  res.json({ok: true});
 });
 
 module.exports = app;
