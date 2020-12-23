@@ -4,8 +4,15 @@ const { logger } = require('./logger');
 const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
+const {
+  fakeStats,
+  fakeProps,
+  philadelphiaPlaceGeoJson,
+  phillyMSAGeoJson,
+  phillyTractGeoJson,
+  savedProps,
+} = require("./mockData");
 const { NODE_ENV, CLIENT_ORIGIN } = require('./config');
-
 
 const app = express();
 
@@ -54,7 +61,13 @@ app.use(helmet());
 app.use(errorHandler);
 
 app.get('/api/', (req, res) => {
-  res.json({ok: true});
+  res.json({
+    fakeStats,
+    fakeProps,
+    philadelphiaPlaceGeoJson,
+    phillyMSAGeoJson,
+    phillyTractGeoJson,
+  });
 });
 
 module.exports = app;
