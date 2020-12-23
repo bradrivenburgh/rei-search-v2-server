@@ -13,7 +13,10 @@
     "deploy": "git push heroku master"
   },
   "keywords": [],
-  "author": "",
+  "engines": {
+    "node": "15.4.0"
+  },
+  "author": "Brad Rivenburgh",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
