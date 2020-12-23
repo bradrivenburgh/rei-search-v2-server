@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const { logger } = require('../logger');
+const { logger } = require('./logger');
 const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -42,9 +42,11 @@ function errorHandler(error, req, res, next) {
 }
 
 app.use(morgan(morganOption));
-app.use(cors({
-  origin: CLIENT_ORIGIN,
-}));
+// Enable cors when wired up to Vercel client
+// app.use(cors({
+//   origin: CLIENT_ORIGIN,
+// }));
+app.use(cors());
 app.use(helmet());
 // app.use(express.json()); // Enable if using non-GET endpoints
 // app.use(validateBearerToken); // Enable after adding validation
