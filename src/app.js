@@ -4,6 +4,7 @@ const { logger } = require('./logger');
 const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
+const census = require('citysdk');
 const {
   fakeStats,
   fakeProps,
@@ -12,7 +13,7 @@ const {
   phillyTractGeoJson,
   savedProps,
 } = require("./mockData");
-const { NODE_ENV, CLIENT_ORIGIN } = require('./config');
+const { CENSUS_API_KEY, NODE_ENV, CLIENT_ORIGIN } = require('./config');
 
 const app = express();
 
@@ -60,7 +61,78 @@ app.use(helmet());
 // Routers can go here
 app.use(errorHandler);
 
-app.get('/api/', (req, res) => {
+app.get("/api/", (req, res) => {
+
+  const censusTractArgs = {
+    vintage: 2019,
+    geoHierarchy: {
+      county: {
+        lat: 39.9,
+        lng: -75.16,
+      },
+      tract: {
+        lat: 39.9,
+        lng: -75.16,
+      },
+    },
+    geoResolution: "500k",
+    sourcePath: ["acs", "acs5", "profile", "variables"],
+    values: ["NAME", "DP02_0002E"],
+    statsKey: CENSUS_API_KEY,
+  };
+
+  const placeArgs = {
+    vintage: 2019,
+    geoHierarchy: {
+      state: "42",
+      place: {
+        lat: 39.9,
+        lng: -75.16,
+      },
+    },
+    geoResolution: "500k",
+    // sourcePath: ["acs", "acs5", "profile", "variables"],
+    // values: ["NAME", "DP02_0002E"],
+    statsKey: CENSUS_API_KEY,
+  };
+
+
+  function censusTractPromise(args = censusTractArgs) {
+    return new Promise((resolve, reject) => {
+      census(args, (err, json) => {
+        if (!err) {
+          resolve(json);
+        } else {
+          reject(err);
+        }
+      });
+    });
+  }
+
+  function placePromise(args = placeArgs) {
+    return new Promise((resolve, reject) => {
+      census(args, (err, json) => {
+        if (!err) {
+          resolve(json);
+        } else {
+          reject(err);
+        }
+      });
+    });
+  }
+
+
+  Promise.all([ placePromise(), censusTractPromise() ]).then((values) => {
+    console.log(values[0], values[1])
+    // res.json({
+    //   fakeStats,
+    //   fakeProps,
+    //   philadelphiaPlaceGeoJson,
+    //   phillyMSAGeoJson,
+    //   phillyTractGeoJson,
+    // });
+  })
+
   res.json({
     fakeStats,
     fakeProps,
@@ -68,6 +140,7 @@ app.get('/api/', (req, res) => {
     phillyMSAGeoJson,
     phillyTractGeoJson,
   });
+
 });
 
 module.exports = app;
