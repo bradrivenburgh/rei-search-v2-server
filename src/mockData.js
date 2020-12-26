@@ -2347,6 +2347,14 @@ const phillyTractGeoJson = {
     ],
   };
 
+  const singleTractShape = {
+    type: "FeatureCollection",
+    features: [
+
+    ],
+  };
+
+
 const philadelphiaPlaceGeoJson = {
     type: "FeatureCollection",
     features: [
@@ -2704,4 +2712,7 @@ const philadelphiaPlaceGeoJson = {
     phillyMSAGeoJson,
     phillyTractGeoJson,
     philadelphiaPlaceGeoJson,
+    singleTractShape,
   }
+
+  
