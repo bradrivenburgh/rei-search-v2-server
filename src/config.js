@@ -6,4 +6,5 @@ module.exports = {
   STREETVIEW_API_KEY: process.env.STREETVIEW_API_KEY,
   STREETVIEW_SIGNATURE: process.env.STREETVIEW_SIGNATURE,
   CENSUS_API_KEY: process.env.CENSUS_API_KEY,
+  MAPBOX_API_KEY: process.env.MAPBOX_API_KEY,
 }
