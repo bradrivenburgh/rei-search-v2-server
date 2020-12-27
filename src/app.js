@@ -68,6 +68,8 @@ app.use(errorHandler);
 /** Route Handlers */
 
 app.get("/api/", (req, res) => {
+
+
   function formatQueryParams(params) {
     const queryItems = Object.keys(params).map(
       (key) => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`
@@ -77,7 +79,8 @@ app.get("/api/", (req, res) => {
 
   //Retrieve coordinates from MapBox
 
-  function getData(userLocation = "110 South Street, Philadelphia, PA") {
+  function getData(userLocation) {
+    userLocation = userLocation !== '' ? userLocation : 'Philadelphia, PA'
     const endPointURL = `https://api.mapbox.com/geocoding/v5/mapbox.places/${userLocation}.json`;
     const params = {
       limit: 1,
@@ -184,6 +187,7 @@ app.get("/api/", (req, res) => {
                 feature.properties["COUNTYFP"] === values[1]["COUNTY"]
             );
             singleTractShape.features[0] = tract;
+
             res.json({
               fakeStats,
               fakeProps,
@@ -197,7 +201,7 @@ app.get("/api/", (req, res) => {
           });
       });
   }
-  getData();
+  getData(req.query.address);
 });
 
 module.exports = app;
