@@ -93,7 +93,6 @@ app.get("/api/", (req, res) => {
         }
       })
       .then(data => {
-        console.log(data.features[0].attributes)
         resolve(data.features[0].attributes)
       })
       .catch(error => {
@@ -144,14 +143,13 @@ app.get("/api/", (req, res) => {
 
 
   Promise.all([ countyPromise(), censusTractGEOID(), censusTractPromise() ]).then((values) => {
-    console.log(values[1])
     const tract = values[2].features.find(
       (feature) =>
         feature.properties["TRACTCE"] === values[1]["TRACT"] &&
         feature.properties["COUNTYFP"] === values[1]["COUNTY"]
     );
-    singleTractShape.features.push(tract);
-    console.log(singleTractShape.features[0].properties);
+    console.log(singleTractShape.features)
+    singleTractShape.features[0] = tract;
     res.json({
       fakeStats,
       fakeProps,
