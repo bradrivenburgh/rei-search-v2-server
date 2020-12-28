@@ -13,6 +13,9 @@
     "deploy": "git push heroku main"
   },
   "keywords": [],
+  "engines": {
+    "node": "15.4.0"
+  },
   "author": "Brad Rivenburgh",
   "license": "ISC",
   "dependencies": {
