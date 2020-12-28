@@ -189,6 +189,8 @@ app.get("/api/", (req, res) => {
 
         Promise.all([countyPromise(), censusTractGEOID(), censusTractPromise()])
           .then((values) => {
+
+            // CRITICAL: How to optimize searching this file so it is memory effienct?
             const tract = values[2].features.find(
               (feature) =>
                 feature.properties["TRACTCE"] === values[1]["TRACT"] &&
