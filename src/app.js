@@ -96,7 +96,7 @@ app.get("/api/", (req, res) => {
     const queryString = formatQueryParams(params);
     const url = endPointURL + "?" + queryString;
     
-    fetch(url)
+    fetch(url) 
       .then((response) => {
         if (response.ok) {
           return response.json();
