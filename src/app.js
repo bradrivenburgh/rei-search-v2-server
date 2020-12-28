@@ -25,7 +25,7 @@ const app = express();
 
 // Create middleware logic
 
-// const allowedOrigins = [CLIENT_ORIGIN, 'http://localhost:3000']
+// const allowedOrigins = [CLIENT_ORIGIN, 'http://localhost:3000/']
 // var corsOptions = {
 //   origin: (origin, callback) => {
 //     if (allowedOrigins.indexOf(origin) !== -1) {
@@ -77,7 +77,6 @@ app.use(errorHandler);
 
 app.get("/api/", (req, res) => {
 
-
   function formatQueryParams(params) {
     const queryItems = Object.keys(params).map(
       (key) => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`
@@ -113,7 +112,7 @@ app.get("/api/", (req, res) => {
         return coordinates;
       })
       .then((coordinates) => {
-        const { lat, lng } = coordinates;
+        const { lat = '39.9526', lng = -75.1652} = coordinates;
 
         const countyArgs = {
           vintage: 2018,
@@ -208,7 +207,10 @@ app.get("/api/", (req, res) => {
           .catch((error) => {
             console.error(error);
           });
-      });
+      })
+      .catch(error => {
+        console.error(error)
+      })
   }
   getData(req.query.address);
 });
