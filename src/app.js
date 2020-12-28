@@ -12,7 +12,9 @@ const {
   singleTractShape,
   savedProps,
 } = require("./mockData");
-const exampleTractShapes = require("./tract.json");
+const paTracts = require("./tract.json");
+const paTractProps = require("./tractProps.geo.json");
+const paTractCoords = require("./tractCoords.geo.json");
 const fetch = require("node-fetch");
 const {
   CENSUS_API_KEY,
@@ -192,14 +194,24 @@ app.get("/api/", (req, res) => {
 
             // CRITICAL: How to optimize searching this file so it is memory efficient?
             // Create a subset data file
-            // cat tract.geo.json | jq '[.features[] | .properties]'
-            // cat tract.geo.json | jq '[.features[] | {coordinates:.geometry.coordinates}]'
-            const tract = values[2].features.find(
-              (feature) =>
-                feature.properties["TRACTCE"] === values[1]["TRACT"] &&
-                feature.properties["COUNTYFP"] === values[1]["COUNTY"]
-            );
+              // Get properties (need to grab just geoid)
+               // cat src/tract.json | jq '[.features[] | .properties | .GEOID]' > src/tractProps.geo.json
+              // Get coordinates
+               // cat cat src/tract.json | jq '[.features[] | {coordinates:.geometry.coordinates}]' > src/tractCoords.geo.json
+
+            // Create GEOID State + County + Tract = GEOID
+            const geoid = values[1]["STATE"] + values[1]["COUNTY"] + values[1]["TRACT"];
+            const tractIndex = paTractProps.indexOf(geoid);
+            const tract = paTracts.features[tractIndex];
             singleTractShape.features[0] = tract;
+
+ 
+            // const tract = values[2].features.find(
+            //   (feature) =>
+            //     feature.properties["TRACTCE"] === values[1]["TRACT"] &&
+            //     feature.properties["COUNTYFP"] === values[1]["COUNTY"]
+            // );
+            // singleTractShape.features[0] = tract;
 
             res.json({
               fakeStats,
