@@ -13,10 +13,10 @@ const {
   singleTractShape,
   savedProps,
 } = require("./mockData");
-const paTracts = require('./paTractsFiltered.json');
-const njTracts = require('./njTractsFiltered.json');
-const mdTracts = require('./mdTractsFiltered.json');
-const deTracts = require('./deTractsFiltered.json');
+const paTracts = require('./tract-data/paTractsFiltered.json');
+const njTracts = require('./tract-data/njTractsFiltered.json');
+const mdTracts = require('./tract-data/mdTractsFiltered.json');
+const deTracts = require('./tract-data/deTractsFiltered.json');
 const fetch = require("node-fetch");
 const {
   CENSUS_API_KEY,
