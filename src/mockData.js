@@ -2346,6 +2346,22 @@ const phillyTractGeoJson = {
       },
     ],
   };
+  // CRITICAL: How to optimize searching this file so it is memory efficient?
+  // Create a subset data file
+    // Create file with just counties in Philly MSA -- e.g., Pennsylvania:
+    /*
+    cat src/paTracts.json | jq -c '[.features[] | select ( 
+      .properties.COUNTYFP == "101" or .properties.COUNTYFP == "017" or 
+      .properties.COUNTYFP == "029" or 
+      .properties.COUNTYFP == "091" or 
+      .properties.COUNTYFP == "045")]' > src/paTractsFiltered.json 
+    */
+    // Get properties (need to grab just geoid)
+      // cat src/tract.json | jq '[.features[] | .properties | .GEOID]' > src/tractProps.geo.json
+    // Get coordinates
+      // cat src/tract.json | jq '[.features[] | {coordinates:.geometry.coordinates}]' > src/tractCoords.geo.json
+    //Minifiy
+      // jq -c . < src/tractCoords.geo.json > src/tractCoordsMinified.geo.json
 
   const singleTractShape = {
     "type": "FeatureCollection",

@@ -193,23 +193,6 @@ app.get("/api/", (req, res) => {
         Promise.all([countyPromise(), censusTractGEOID(), censusTractPromise()])
           .then((values) => {
 
-            // CRITICAL: How to optimize searching this file so it is memory efficient?
-            // Create a subset data file
-              // Create file with just counties in Philly MSA -- e.g., Pennsylvania:
-              /*
-              cat src/paTracts.json | jq -c '[.features[] | select ( 
-                .properties.COUNTYFP == "101" or .properties.COUNTYFP == "017" or 
-                .properties.COUNTYFP == "029" or 
-                .properties.COUNTYFP == "091" or 
-                .properties.COUNTYFP == "045")]' > src/paTractsFiltered.json 
-              */
-              // Get properties (need to grab just geoid)
-               // cat src/tract.json | jq '[.features[] | .properties | .GEOID]' > src/tractProps.geo.json
-              // Get coordinates
-               // cat src/tract.json | jq '[.features[] | {coordinates:.geometry.coordinates}]' > src/tractCoords.geo.json
-              //Minifiy
-                // jq -c . < src/tractCoords.geo.json > src/tractCoordsMinified.geo.json
-
             // Create GEOID State + County + Tract = GEOID
             const geoid = values[1]["STATE"] + values[1]["COUNTY"] + values[1]["TRACT"];
             console.log(values[1])
