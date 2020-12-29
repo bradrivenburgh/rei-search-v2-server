@@ -2348,10 +2348,14 @@ const phillyTractGeoJson = {
   };
 
   const singleTractShape = {
-    type: "FeatureCollection",
-    features: [
-
-    ],
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {},
+        "properties": {}
+      }
+    ]
   };
 
 

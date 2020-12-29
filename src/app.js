@@ -13,8 +13,9 @@ const {
   savedProps,
 } = require("./mockData");
 const paTracts = require("./tract.json");
-const paTractProps = require("./tractProps.geo.json");
-const paTractCoords = require("./tractCoords.geo.json");
+const paTractGEOIDs = require('./tractGEOIDs.geo.json');
+const paTractProps = require("./tractPropsMinified.geo.json");
+const paTractCoords = require("./tractCoordsMinified.geo.json");
 const fetch = require("node-fetch");
 const {
   CENSUS_API_KEY,
@@ -197,21 +198,28 @@ app.get("/api/", (req, res) => {
               // Get properties (need to grab just geoid)
                // cat src/tract.json | jq '[.features[] | .properties | .GEOID]' > src/tractProps.geo.json
               // Get coordinates
-               // cat cat src/tract.json | jq '[.features[] | {coordinates:.geometry.coordinates}]' > src/tractCoords.geo.json
+               // cat src/tract.json | jq '[.features[] | {coordinates:.geometry.coordinates}]' > src/tractCoords.geo.json
+              //Minifiy
+                // jq -c . < src/tractCoords.geo.json > src/tractCoordsMinified.geo.json
 
             // Create GEOID State + County + Tract = GEOID
             const geoid = values[1]["STATE"] + values[1]["COUNTY"] + values[1]["TRACT"];
-            let tract;
+            let tract, tractProps, tractCoords;
             // If state is PA
             if (values[1]["STATE"] == 42) {
-              const tractIndex = paTractProps.indexOf(geoid);
-              tract = paTracts.features[tractIndex];
+              const tractIndex = paTractGEOIDs.indexOf(geoid);
+              tractProps = paTractProps[tractIndex];
+              tractCoords = paTractCoords[tractIndex]
+              singleTractShape.features[0].geometry = tractCoords;
+              singleTractShape.features[0].properties = tractProps;
+              console.log(geoid)
+              console.log(singleTractShape)
             } else {
               tract = values[2].features.find(
                 (feature) => feature.properties["GEOID"] === geoid
               );
+              singleTractShape.features[0] = tract;
             }
-            singleTractShape.features[0] = tract;
 
  
 
