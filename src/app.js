@@ -204,8 +204,12 @@ app.get("/api/", (req, res) => {
             let tract;
             // If state is PA
             if (values[1]["STATE"] == 42) {
-              const tractIndex = paTractProps.indexOf(geoid);
-              tract = paTracts.features[tractIndex];
+              tract = values[2].features.find(
+                (feature) => feature.properties["GEOID"] === geoid
+              );
+
+              // const tractIndex = paTractProps.indexOf(geoid);
+              // tract = paTracts.features[tractIndex];
             } else {
               tract = values[2].features.find(
                 (feature) => feature.properties["GEOID"] === geoid
