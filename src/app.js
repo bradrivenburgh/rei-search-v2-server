@@ -200,9 +200,12 @@ app.get("/api/", (req, res) => {
             const geoid =
               values[1]["STATE"] + values[1]["COUNTY"] + values[1]["TRACT"];
 
-            const allowedStates = ["10", "24", "34", "42"];
-            const allowedCounties = ["003", "005", "007", "015", "017", "029", "033", "045", "091", "101"];
-            const isInMSA = allowedStates.includes(values[1]["STATE"]) && allowedCounties.includes(values[1]["COUNTY"]);
+            const msaLocations = {
+              states: ["10", "24", "34", "42"],
+              counties: ["003", "005", "007", "015", "017", "029", "033", "045", "091", "101"]
+            }
+            const { states, counties } = msaLocations;
+            const isInMSA = states.includes(values[1]["STATE"]) && counties.includes(values[1]["COUNTY"]);
 
             // Check if searched location is in MSA
             if (isInMSA) {
