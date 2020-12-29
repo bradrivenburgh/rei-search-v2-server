@@ -12,10 +12,10 @@ const {
   singleTractShape,
   savedProps,
 } = require("./mockData");
-const paTracts = require("./tract.json");
-const paTractGEOIDs = require('./tractGEOIDs.geo.json');
-const paTractProps = require("./tractPropsMinified.geo.json");
-const paTractCoords = require("./tractCoordsMinified.geo.json");
+const paTracts = require('./paTractsFiltered.json');
+const njTracts = require('./njTractsFiltered.json');
+const mdTracts = require('./mdTractsFiltered.json');
+const deTracts = require('./deTractsFiltered.json');
 const fetch = require("node-fetch");
 const {
   CENSUS_API_KEY,
@@ -139,7 +139,7 @@ app.get("/api/", (req, res) => {
               lng,
             },
           },
-          geoResolution: "500k",
+          // geoResolution: "500k",
           sourcePath: ["acs", "acs5", "profile", "variables"],
           values: ["NAME", "DP02_0002E"],
           statsKey: CENSUS_API_KEY,
@@ -195,6 +195,14 @@ app.get("/api/", (req, res) => {
 
             // CRITICAL: How to optimize searching this file so it is memory efficient?
             // Create a subset data file
+              // Create file with just counties in Philly MSA -- e.g., Pennsylvania:
+              /*
+              cat src/paTracts.json | jq -c '[.features[] | select ( 
+                .properties.COUNTYFP == "101" or .properties.COUNTYFP == "017" or 
+                .properties.COUNTYFP == "029" or 
+                .properties.COUNTYFP == "091" or 
+                .properties.COUNTYFP == "045")]' > src/paTractsFiltered.json 
+              */
               // Get properties (need to grab just geoid)
                // cat src/tract.json | jq '[.features[] | .properties | .GEOID]' > src/tractProps.geo.json
               // Get coordinates
@@ -204,25 +212,26 @@ app.get("/api/", (req, res) => {
 
             // Create GEOID State + County + Tract = GEOID
             const geoid = values[1]["STATE"] + values[1]["COUNTY"] + values[1]["TRACT"];
-            let tract, tractProps, tractCoords;
-            // If state is PA
-            if (values[1]["STATE"] == 42) {
-              const tractIndex = paTractGEOIDs.indexOf(geoid);
-              tractProps = paTractProps[tractIndex];
-              tractCoords = paTractCoords[tractIndex]
-              singleTractShape.features[0].geometry = tractCoords;
-              singleTractShape.features[0].properties = tractProps;
-              console.log(geoid)
-              console.log(singleTractShape)
-            } else {
-              tract = values[2].features.find(
+            console.log(values[1])
+            let state, tract;
+              switch(values[1]["STATE"]) {
+                case "10":
+                  state = deTracts;
+                  break;
+                case "24":
+                  state = mdTracts;
+                  break;
+                case "34":
+                  state = njTracts;
+                  break;
+                default:
+                  state = paTracts;
+              }
+              tract = state.find(
                 (feature) => feature.properties["GEOID"] === geoid
               );
               singleTractShape.features[0] = tract;
-            }
-
- 
-
+              
             res.json({
               fakeStats,
               fakeProps,
