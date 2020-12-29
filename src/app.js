@@ -201,17 +201,19 @@ app.get("/api/", (req, res) => {
 
             // Create GEOID State + County + Tract = GEOID
             const geoid = values[1]["STATE"] + values[1]["COUNTY"] + values[1]["TRACT"];
-            const tractIndex = paTractProps.indexOf(geoid);
-            const tract = paTracts.features[tractIndex];
+            let tract;
+            // If state is PA
+            if (values[1]["STATE"] == 42) {
+              const tractIndex = paTractProps.indexOf(geoid);
+              tract = paTracts.features[tractIndex];
+            } else {
+              tract = values[2].features.find(
+                (feature) => feature.properties["GEOID"] === geoid
+              );
+            }
             singleTractShape.features[0] = tract;
 
  
-            // const tract = values[2].features.find(
-            //   (feature) =>
-            //     feature.properties["TRACTCE"] === values[1]["TRACT"] &&
-            //     feature.properties["COUNTYFP"] === values[1]["COUNTY"]
-            // );
-            // singleTractShape.features[0] = tract;
 
             res.json({
               fakeStats,
