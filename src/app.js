@@ -9,6 +9,7 @@ const {
   fakeStats,
   fakeProps,
   phillyMSAGeoJson,
+  phillyTractGeoJson,
   singleTractShape,
   savedProps,
 } = require("./mockData");
@@ -79,7 +80,6 @@ app.use(errorHandler);
 /** Route Handlers */
 
 app.get("/api/", (req, res) => {
-
   function formatQueryParams(params) {
     const queryItems = Object.keys(params).map(
       (key) => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`
@@ -90,15 +90,18 @@ app.get("/api/", (req, res) => {
   //Retrieve coordinates from MapBox
 
   function getData(userLocation) {
-    userLocation = userLocation !== '' ? userLocation : 'Philadelphia, PA'
+    userLocation = userLocation !== "" ? userLocation : "Philadelphia, PA";
     const endPointURL = `https://api.mapbox.com/geocoding/v5/mapbox.places/${userLocation}.json`;
     const params = {
       limit: 1,
+      fuzzyMatch: true,
+      bbox: '-76.23327974765701, 39.290566999999996, -74.389708, 40.608579999999996',
       access_token: MAPBOX_API_KEY,
     };
+
     const queryString = formatQueryParams(params);
     const url = endPointURL + "?" + queryString;
-    
+
     fetch(url)
       .then((response) => {
         if (response.ok) {
@@ -111,11 +114,10 @@ app.get("/api/", (req, res) => {
           lat: data.features[0].center[1],
           lng: data.features[0].center[0],
         };
-
         return coordinates;
       })
       .then((coordinates) => {
-        const { lat = '39.9526', lng = -75.1652} = coordinates;
+        const { lat = "39.9526", lng = -75.1652 } = coordinates;
 
         const countyArgs = {
           vintage: 2018,
@@ -192,29 +194,42 @@ app.get("/api/", (req, res) => {
 
         Promise.all([countyPromise(), censusTractGEOID(), censusTractPromise()])
           .then((values) => {
+            let state, tract;
 
             // Create GEOID State + County + Tract = GEOID
-            const geoid = values[1]["STATE"] + values[1]["COUNTY"] + values[1]["TRACT"];
-            console.log(values[1])
-            let state, tract;
-              switch(values[1]["STATE"]) {
-                case "10":
-                  state = deTracts;
-                  break;
-                case "24":
-                  state = mdTracts;
-                  break;
-                case "34":
-                  state = njTracts;
-                  break;
-                default:
-                  state = paTracts;
-              }
-              tract = state.find(
-                (feature) => feature.properties["GEOID"] === geoid
-              );
-              singleTractShape.features[0] = tract;
-              
+            const geoid =
+              values[1]["STATE"] + values[1]["COUNTY"] + values[1]["TRACT"];
+
+            const allowedStates = ["10", "24", "34", "42"];
+            const allowedCounties = ["003", "005", "007", "015", "017", "029", "033", "045", "091", "101"];
+            const isInMSA = allowedStates.includes(values[1]["STATE"]) && allowedCounties.includes(values[1]["COUNTY"]);
+
+            // Check if searched location is in MSA
+            if (isInMSA) {
+                switch (values[1]["STATE"]) {
+                  case "10":
+                    state = deTracts;
+                    break;
+                  case "24":
+                    state = mdTracts;
+                    break;
+                  case "34":
+                    state = njTracts;
+                    break;
+                  default:
+                    state = paTracts;
+                }              
+                tract = state.find(
+                  (feature) => feature.properties["GEOID"] === geoid
+                );    
+            } 
+            // If it falls outside of MSA, default to Philadelphia, PA
+            else {
+              tract = phillyTractGeoJson.features[0];
+            }
+
+            singleTractShape.features[0] = tract;
+
             res.json({
               fakeStats,
               fakeProps,
@@ -227,9 +242,9 @@ app.get("/api/", (req, res) => {
             console.error(error);
           });
       })
-      .catch(error => {
-        console.error(error)
-      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
   getData(req.query.address);
 });
