@@ -132,8 +132,9 @@ app.get("/api/", (req, res) => {
               lng,
               fipsCodes,
               stateGeoid: fipsCodes["STATE"],
-              countyGeoid: fipsCodes["STATE"] + fipsCodes["COUNTY"],
-              tractGeoid: fipsCodes["STATE"] + fipsCodes["COUNTY"] + fipsCodes["TRACT"],
+              countyGeoid: fipsCodes["COUNTY"],
+              tractGeoid: fipsCodes["TRACT"],
+              combinedGeoid: fipsCodes["STATE"] + fipsCodes["COUNTY"] + fipsCodes["TRACT"],
             };
             return geoTags;
           });
@@ -154,14 +155,45 @@ app.get("/api/", (req, res) => {
         };
 
         const censusTractArgs = {
+          sourcePath: ["acs", "acs5", "profile"],
           vintage: 2019,
+          values: [
+            "DP05_0001E",
+            "DP03_0027PE",
+            "DP03_0028PE",
+            "DP03_0029PE",
+            "DP03_0030PE",
+            "DP03_0031PE",
+            "DP03_0033PE",
+            "DP03_0034PE",
+            "DP03_0035PE",
+            "DP03_0036PE",
+            "DP03_0037PE",
+            "DP03_0038PE",
+            "DP03_0039PE",
+            "DP03_0040PE",
+            "DP03_0041PE",
+            "DP03_0042PE",
+            "DP03_0043PE",
+            "DP03_0044PE",
+            "DP03_0045PE",
+            "DP03_0061E",
+            "DP04_0126E",
+            "DP04_0080E",
+            "DP05_0018E",
+            "DP05_0039PE",
+            "DP05_0044PE",
+            "DP05_0038PE",
+            "DP05_0052PE",
+            "DP05_0037PE",
+            "DP03_0004PE",
+            "DP03_0005PE",
+          ],
           geoHierarchy: {
             state: geoTags.stateGeoid,
             county: geoTags.countyGeoid,
             tract: geoTags.tractGeoid,
           },
-          sourcePath: ["acs", "acs5", "profile", "variables"],
-          values: ["NAME", "DP02_0002E"],
           statsKey: CENSUS_API_KEY,
         };
 
@@ -238,6 +270,7 @@ app.get("/api/", (req, res) => {
             singleTractShape.features[0] = tract;
 
             res.json({
+              tractStats: values[2],
               fakeStats,
               fakeProps,
               philadelphiaPlaceGeoJson: values[0],
