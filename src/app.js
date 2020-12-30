@@ -243,6 +243,9 @@ app.get("/api/", (req, res) => {
             const { states, counties } = msaLocations;
             const isInMSA = states.includes(values[1]["STATE"]) && counties.includes(values[1]["COUNTY"]);
 
+            // If the request falls outside of MSA
+            let badRequest = false;
+
             // Check if searched location is in MSA
             if (isInMSA) {
                 switch (values[1]["STATE"]) {
@@ -265,11 +268,13 @@ app.get("/api/", (req, res) => {
             // If it falls outside of MSA, default to Philadelphia, PA
             else {
               tract = phillyTractGeoJson.features[0];
+              badRequest = true;
             }
 
             singleTractShape.features[0] = tract;
 
             res.json({
+              badRequest,
               tractStats: values[2],
               fakeStats,
               fakeProps,
@@ -279,7 +284,7 @@ app.get("/api/", (req, res) => {
             });
           })
           .catch((error) => {
-            console.error(error);
+            throw new Error(error)
           });
       })
       .catch((error) => {
