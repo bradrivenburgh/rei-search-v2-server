@@ -140,15 +140,12 @@ app.get("/api/", (req, res) => {
 
       })
       .then((geoTags) => {
-        const { lat = "39.9526", lng = -75.1652 } = geoTags;
 
         const countyArgs = {
           vintage: 2018,
           geoHierarchy: {
-            county: {
-              lat,
-              lng,
-            },
+            state: geoTags.stateGeoid,
+            county: geoTags.countyGeoid,
           },
           geoResolution: "5m",
           sourcePath: ["cbp"],
@@ -159,32 +156,18 @@ app.get("/api/", (req, res) => {
         const censusTractArgs = {
           vintage: 2019,
           geoHierarchy: {
-            tract: {
-              lat,
-              lng,
-            },
+            state: geoTags.stateGeoid,
+            county: geoTags.countyGeoid,
+            tract: geoTags.tractGeoid,
           },
-          // geoResolution: "500k",
           sourcePath: ["acs", "acs5", "profile", "variables"],
           values: ["NAME", "DP02_0002E"],
           statsKey: CENSUS_API_KEY,
         };
 
-        function censusTractGEOID() {
+        function censusGeoids() {
           return new Promise((resolve, reject) => {
             resolve(geoTags.fipsCodes)
-          });
-        }
-
-        function censusTractPromise(args = censusTractArgs) {
-          return new Promise((resolve, reject) => {
-            census(args, (err, json) => {
-              if (!err) {
-                resolve(json);
-              } else {
-                reject(err);
-              }
-            });
           });
         }
 
@@ -200,7 +183,20 @@ app.get("/api/", (req, res) => {
           });
         }
 
-        Promise.all([countyPromise(), censusTractGEOID(), censusTractPromise()])
+        function censusTractPromise(args = censusTractArgs) {
+          return new Promise((resolve, reject) => {
+            census(args, (err, json) => {
+              if (!err) {
+                resolve(json);
+              } else {
+                reject(err);
+              }
+            });
+          });
+        }
+
+
+        Promise.all([countyPromise(), censusGeoids(), censusTractPromise()])
           .then((values) => {
             let state, tract;
 
