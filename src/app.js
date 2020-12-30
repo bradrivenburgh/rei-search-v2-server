@@ -110,14 +110,37 @@ app.get("/api/", (req, res) => {
         throw new Error(response.statusText);
       })
       .then((data) => {
-        const coordinates = {
-          lat: data.features[0].center[1],
-          lng: data.features[0].center[0],
-        };
-        return coordinates;
+        const lat = data.features[0].center[1];
+        const lng = data.features[0].center[0];
+
+        // Retrieve Census FIPS codes for the given coordinates
+
+        return fetch(
+          `https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_ACS2019/Mapserver/8/query?geometry=${lng},${lat}&geometryType=esriGeometryPoint&inSR=4269&spatialRel=esriSpatialRelIntersects&returnGeometry=false&f=pjson&outFields=STATE,COUNTY,TRACT`
+        )
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            } else {
+              throw new Error(response.statusText);
+            }
+          })
+          .then((data) => {
+            const fipsCodes = data.features[0].attributes;
+            let geoTags = {
+              lat,
+              lng,
+              fipsCodes,
+              stateGeoid: fipsCodes["STATE"],
+              countyGeoid: fipsCodes["STATE"] + fipsCodes["COUNTY"],
+              tractGeoid: fipsCodes["STATE"] + fipsCodes["COUNTY"] + fipsCodes["TRACT"],
+            };
+            return geoTags;
+          });
+
       })
-      .then((coordinates) => {
-        const { lat = "39.9526", lng = -75.1652 } = coordinates;
+      .then((geoTags) => {
+        const { lat = "39.9526", lng = -75.1652 } = geoTags;
 
         const countyArgs = {
           vintage: 2018,
@@ -149,22 +172,7 @@ app.get("/api/", (req, res) => {
 
         function censusTractGEOID() {
           return new Promise((resolve, reject) => {
-            fetch(
-              `https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_ACS2019/Mapserver/8/query?geometry=${lng},${lat}&geometryType=esriGeometryPoint&inSR=4269&spatialRel=esriSpatialRelIntersects&returnGeometry=false&f=pjson&outFields=STATE,COUNTY,TRACT`
-            )
-              .then((response) => {
-                if (response.ok) {
-                  return response.json();
-                } else {
-                  throw new Error(response.statusText);
-                }
-              })
-              .then((data) => {
-                resolve(data.features[0].attributes);
-              })
-              .catch((error) => {
-                reject(error);
-              });
+            resolve(geoTags.fipsCodes)
           });
         }
 
