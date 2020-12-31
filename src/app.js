@@ -226,11 +226,6 @@ app.get("/api/", (req, res) => {
 
         Promise.all([countyPromise(), censusGeoids(), censusTractPromise()])
           .then((values) => {
-            let state, tract;
-
-            // Create GEOID State + County + Tract = GEOID
-            const geoid =
-              values[1]["STATE"] + values[1]["COUNTY"] + values[1]["TRACT"];
 
             const msaLocations = {
               states: ["10", "24", "34", "42"],
@@ -242,10 +237,10 @@ app.get("/api/", (req, res) => {
             // If the request falls outside of MSA
             let badRequest = false;
 
-            // Check if searched location is in MSA
+            // Check if searched location is in MSA; if not replace with default 
+            // location / stats; set badRequest to true
             if (!isInMSA) {
               values[2] = phillyTractGeoJson;
-              tract = phillyTractGeoJson.features[0];
               badRequest = true;
             }
 
