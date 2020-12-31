@@ -9,7 +9,8 @@ const {
   fakeStats,
   fakeProps,
   phillyMSAGeoJson,
-  defaultTractGeoJson,
+  defaultCounty,
+  defaultTract,
   savedProps,
 } = require("./mockData");
 const fetch = require("node-fetch");
@@ -243,7 +244,8 @@ app.get("/api/", (req, res) => {
             // Check if searched location is in MSA; if not replace with default 
             // location / stats; set badRequest to true
             if (!isInMSA) {
-              values[2] = defaultTractGeoJson;
+              values[0] = defaultCounty;
+              values[2] = defaultTract;
               badRequest = true;
             }
 
@@ -252,9 +254,9 @@ app.get("/api/", (req, res) => {
               tractStats: values[2],
               fakeStats,
               fakeProps,
-              phillyMSAGeoJson,
-              countyGeoJson: values[0],
-              tractGeoJson: values[2],
+              msa: phillyMSAGeoJson,
+              county: values[0],
+              tract: values[2],
 
             });
           })
