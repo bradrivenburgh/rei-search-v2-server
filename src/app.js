@@ -251,7 +251,11 @@ app.get("/api/", (req, res) => {
 
             res.json({
               badRequest,
-              tractStats: values[2].features[0].properties,
+              apiStatistics: {
+                msaStats: phillyMSAGeoJson.features[0].properties,
+                countyStats: values[0].features[0].properties,
+                tractStats: values[2].features[0].properties,
+              },
               fakeStats,
               fakeProps,
               msa: phillyMSAGeoJson,

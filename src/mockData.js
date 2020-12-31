@@ -117,15 +117,15 @@ const fakeStats = {
       statistic: "Price-to-rent ratio",
       advisory: "(Lower is better)",
       CT: "18.00",
-      MSA: "18.20",
-      USA: "18.30",
+      CTY: "18.20",
+      MSA: "18.30",
     },
     {
       id: 2,
       statistic: "Median income",
       CT: "$40,000",
+      CTY: "$40,000",
       MSA: "$40,000",
-      USA: "$40,000",
     },
     {
       id: 3,
@@ -136,12 +136,12 @@ const fakeStats = {
         "Retail trade (18.29%)",
         "Accommodation and food services (8.75%)",
       ],
-      MSA: [
+      CTY: [
         "Health care and social assistance (19.29%)",
         "Retail trade (18.29%)",
         "Accommodation and food services (8.75%)",
       ],
-      USA: [
+      MSA: [
         "Health care and social assistance (19.29%)",
         "Retail trade (18.29%)",
         "Accommodation and food services (8.75%)",
@@ -156,12 +156,12 @@ const fakeStats = {
         "Retail trade (18.29%)",
         "Accommodation and food services (8.75%)",
       ],
-      MSA: [
+      CTY: [
         "Health care and social assistance (19.29%)",
         "Retail trade (18.29%)",
         "Accommodation and food services (8.75%)",
       ],
-      USA: [
+      MSA: [
         "Health care and social assistance (19.29%)",
         "Retail trade (18.29%)",
         "Accommodation and food services (8.75%)",
@@ -175,20 +175,27 @@ const fakeStats = {
       statistic: "Population growth rate",
       advisory: "(Higher is better)",
       CT: "2.18%",
-      MSA: "2.40%",
-      USA: "2.00%",
+      CTY: "2.40%",
+      MSA: "2.00%",
     },
     {
       id: 2,
       statistic: "Median age",
       CT: "34",
-      MSA: "35",
-      USA: "36",
+      CTY: "35",
+      MSA: "36",
     },
     {
       id: 3,
       statistic: "Race and ethnicity",
       CT: [
+        "American Indian (##%)",
+        "Asian (##%)",
+        "Black (##%)",
+        "Pacific Islander (##%)",
+        "White (##%)",
+      ],
+      CTY: [
         "American Indian (##%)",
         "Asian (##%)",
         "Black (##%)",
@@ -202,20 +209,13 @@ const fakeStats = {
         "Pacific Islander (##%)",
         "White (##%)",
       ],
-      USA: [
-        "American Indian (##%)",
-        "Asian (##%)",
-        "Black (##%)",
-        "Pacific Islander (##%)",
-        "White (##%)",
-      ],
     },
     {
       id: 4,
       statistic: "Employment status",
       CT: ["Employed (##%)", "Unemployed (##%)"],
+      CTY: ["Employed (##%)", "Unemployed (##%)"],
       MSA: ["Employed (##%)", "Unemployed (##%)"],
-      USA: ["Employed (##%)", "Unemployed (##%)"],
     },
   ],
 };
