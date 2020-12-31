@@ -10,13 +10,8 @@ const {
   fakeProps,
   phillyMSAGeoJson,
   phillyTractGeoJson,
-  singleTractShape,
   savedProps,
 } = require("./mockData");
-const paTracts = require('./tract-data/paTractsFiltered.json');
-const njTracts = require('./tract-data/njTractsFiltered.json');
-const mdTracts = require('./tract-data/mdTractsFiltered.json');
-const deTracts = require('./tract-data/deTractsFiltered.json');
 const fetch = require("node-fetch");
 const {
   CENSUS_API_KEY,
@@ -248,31 +243,11 @@ app.get("/api/", (req, res) => {
             let badRequest = false;
 
             // Check if searched location is in MSA
-            if (isInMSA) {
-                switch (values[1]["STATE"]) {
-                  case "10":
-                    state = deTracts;
-                    break;
-                  case "24":
-                    state = mdTracts;
-                    break;
-                  case "34":
-                    state = njTracts;
-                    break;
-                  default:
-                    state = paTracts;
-                }              
-                tract = state.find(
-                  (feature) => feature.properties["GEOID"] === geoid
-                );    
-            } 
-            // If it falls outside of MSA, default to Philadelphia, PA
-            else {
+            if (!isInMSA) {
               values[2] = phillyTractGeoJson;
               tract = phillyTractGeoJson.features[0];
               badRequest = true;
             }
-            singleTractShape.features[0] = tract;
 
             res.json({
               badRequest,
@@ -282,7 +257,6 @@ app.get("/api/", (req, res) => {
               philadelphiaPlaceGeoJson: values[0],
               phillyMSAGeoJson,
               phillyTractGeoJson: values[2],
-           // phillyTractGeoJson: singleTractShape,
 
             });
           })
