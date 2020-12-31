@@ -158,9 +158,9 @@ app.get("/api/", (req, res) => {
           "DP03_0043PE",
           "DP03_0044PE",
           "DP03_0045PE",
-          "DP03_0061E",
-          "DP04_0126E",
-          "DP04_0080E",
+          "DP03_0062E",
+          "DP04_0134E",
+          "DP04_0089E",
           "DP05_0018E",
           "DP05_0039PE",
           "DP05_0044PE",
@@ -251,7 +251,7 @@ app.get("/api/", (req, res) => {
 
             res.json({
               badRequest,
-              tractStats: values[2],
+              tractStats: values[2].features[0].properties,
               fakeStats,
               fakeProps,
               msa: phillyMSAGeoJson,
