@@ -194,6 +194,7 @@ app.get("/api/", (req, res) => {
             county: geoTags.countyGeoid,
             tract: geoTags.tractGeoid,
           },
+          geoResolution: "500k",
           statsKey: CENSUS_API_KEY,
         };
 
@@ -267,10 +268,10 @@ app.get("/api/", (req, res) => {
             } 
             // If it falls outside of MSA, default to Philadelphia, PA
             else {
+              values[2] = phillyTractGeoJson;
               tract = phillyTractGeoJson.features[0];
               badRequest = true;
             }
-
             singleTractShape.features[0] = tract;
 
             res.json({
@@ -280,7 +281,9 @@ app.get("/api/", (req, res) => {
               fakeProps,
               philadelphiaPlaceGeoJson: values[0],
               phillyMSAGeoJson,
-              phillyTractGeoJson: singleTractShape,
+              phillyTractGeoJson: values[2],
+           // phillyTractGeoJson: singleTractShape,
+
             });
           })
           .catch((error) => {

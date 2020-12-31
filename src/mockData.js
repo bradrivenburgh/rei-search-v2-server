@@ -1,5 +1,115 @@
 const { STREETVIEW_API_KEY, STREETVIEW_SIGNATURE } = require("./config"); //Get Google Streetview keys
 
+const statsTemplate = {
+  economic: [
+    {
+      id: 1,
+      statistic: "Price-to-rent ratio",
+      advisory: "(Lower is better)",
+      CT: "18.00",
+      MSA: "18.20",
+      USA: "18.30",
+    },
+    {
+      id: 2,
+      statistic: "Median income",
+      CT: "$40,000",
+      MSA: "$40,000",
+      USA: "$40,000",
+    },
+    {
+      id: 3,
+      statistic: "Top three sectors",
+      advisory: "(Ordered by percentage of working population employed)",
+      CT: [
+        "Health care and social assistance (19.29%)",
+        "Retail trade (18.29%)",
+        "Accommodation and food services (8.75%)",
+      ],
+      MSA: [
+        "Health care and social assistance (19.29%)",
+        "Retail trade (18.29%)",
+        "Accommodation and food services (8.75%)",
+      ],
+      USA: [
+        "Health care and social assistance (19.29%)",
+        "Retail trade (18.29%)",
+        "Accommodation and food services (8.75%)",
+      ],
+    },
+    {
+      id: 4,
+      statistic: "Top three occupations",
+      advisory: "(Ordered by percentage of working population in occupation)",
+      CT: [
+        "Health care and social assistance (19.29%)",
+        "Retail trade (18.29%)",
+        "Accommodation and food services (8.75%)",
+      ],
+      MSA: [
+        "Health care and social assistance (19.29%)",
+        "Retail trade (18.29%)",
+        "Accommodation and food services (8.75%)",
+      ],
+      USA: [
+        "Health care and social assistance (19.29%)",
+        "Retail trade (18.29%)",
+        "Accommodation and food services (8.75%)",
+      ],
+    },
+  ],
+
+  demographic: [
+    {
+      id: 1,
+      statistic: "Population growth rate",
+      advisory: "(Higher is better)",
+      CT: "2.18%",
+      MSA: "2.40%",
+      USA: "2.00%",
+    },
+    {
+      id: 2,
+      statistic: "Median age",
+      CT: "34",
+      MSA: "35",
+      USA: "36",
+    },
+    {
+      id: 3,
+      statistic: "Race and ethnicity",
+      CT: [
+        "American Indian (##%)",
+        "Asian (##%)",
+        "Black (##%)",
+        "Pacific Islander (##%)",
+        "White (##%)",
+      ],
+      MSA: [
+        "American Indian (##%)",
+        "Asian (##%)",
+        "Black (##%)",
+        "Pacific Islander (##%)",
+        "White (##%)",
+      ],
+      USA: [
+        "American Indian (##%)",
+        "Asian (##%)",
+        "Black (##%)",
+        "Pacific Islander (##%)",
+        "White (##%)",
+      ],
+    },
+    {
+      id: 4,
+      statistic: "Employment status",
+      CT: ["Employed (##%)", "Unemployed (##%)"],
+      MSA: ["Employed (##%)", "Unemployed (##%)"],
+      USA: ["Employed (##%)", "Unemployed (##%)"],
+    },
+  ],
+};
+
 const fakeStats = {
   economic: [
     {
@@ -1054,53 +1164,101 @@ const phillyMSAGeoJson = {
   ],
 };
 
-const phillyTractGeoJson = {
+phillyTractGeoJson = {
   type: "FeatureCollection",
   features: [
     {
       type: "Feature",
       geometry: {
-        bbox: [-75.130448, 39.97388, -75.117355, 39.984755],
+        bbox: [-75.137669, 40.001624, -75.112161, 40.019957],
         type: "Polygon",
         coordinates: [
           [
-            [-75.130448, 39.978589],
-            [-75.127623, 39.981429999999996],
-            [-75.125062, 39.982372999999995],
-            [-75.12267899999999, 39.983488],
-            [-75.120252, 39.984755],
-            [-75.118522, 39.982825],
-            [-75.117355, 39.981480999999995],
-            [-75.11769699999999, 39.980903999999995],
-            [-75.118611, 39.978879],
-            [-75.11976299999999, 39.976369],
-            [-75.120431, 39.975697],
-            [-75.122592, 39.97388],
-            [-75.123391, 39.974402999999995],
-            [-75.124321, 39.975003],
-            [-75.12520099999999, 39.975558],
-            [-75.12613600000002, 39.976082],
-            [-75.12862799999999, 39.977533],
-            [-75.130448, 39.978589],
+            [-75.13752900000001, 40.004304],
+            [-75.136858, 40.007394],
+            [-75.135858, 40.011981999999996],
+            [-75.135533, 40.013463],
+            [-75.134194, 40.019619],
+            [-75.131828, 40.019315999999996],
+            [-75.128883, 40.018944999999995],
+            [-75.125023, 40.018435],
+            [-75.124687, 40.019957],
+            [-75.12275199999999, 40.019722],
+            [-75.12073, 40.019469],
+            [-75.117154, 40.019006],
+            [-75.117324, 40.017444],
+            [-75.116272, 40.017423],
+            [-75.119439, 40.013025999999996],
+            [-75.112161, 40.012085],
+            [-75.112497, 40.010489],
+            [-75.112821, 40.009007],
+            [-75.113986, 40.00356],
+            [-75.11609, 40.003067],
+            [-75.116411, 40.001624],
+            [-75.119314, 40.002002999999995],
+            [-75.12441, 40.002634],
+            [-75.123949, 40.004813999999996],
+            [-75.12786299999999, 40.005057],
+            [-75.131937, 40.005156],
+            [-75.133692, 40.005002999999995],
+            [-75.137669, 40.003645],
+            [-75.13752900000001, 40.004304],
           ],
         ],
       },
       properties: {
+        DP03_0034PE: 5.1,
         STATEFP: "42",
-        COUNTYFP: "101",
-        TRACTCE: "016000",
-        AFFGEOID: "1400000US42101016000",
-        GEOID: "42101016000",
-        NAME: "160",
         LSAD: "CT",
-        ALAND: 721031,
+        DP03_0038PE: 8.3,
+        DP03_0044PE: 8.3,
+        DP03_0030PE: 14.7,
+        DP03_0033PE: 0,
+        tract: "038300",
+        DP03_0035PE: 3,
+        DP05_0039PE: 0.1,
+        AFFGEOID: "1400000US42101038300",
+        DP03_0042PE: 35.9,
+        DP03_0040PE: 3.7,
+        DP05_0037PE: 23.7,
+        DP03_0028PE: 40.7,
+        DP03_0027PE: 26.8,
+        county: "101",
+        DP03_0043PE: 5.4,
+        state: "42",
+        DP05_0018E: 31.3,
+        GEOID: "42101038300",
         AWATER: 0,
+        DP03_0005PE: 6.7,
+        DP05_0044PE: 0.1,
+        DP04_0126E: 464,
+        DP04_0080E: 479,
+        DP03_0036PE: 0.5,
+        DP05_0052PE: 1,
+        DP03_0045PE: 1.6,
+        DP03_0037PE: 13.7,
+        DP03_0039PE: 0,
+        COUNTYFP: "101",
+        DP03_0041PE: 14.4,
+        DP03_0004PE: 35.7,
+        TRACTCE: "038300",
+        DP05_0001E: 3352,
+        DP03_0029PE: 12.9,
+        NAME: "383",
+        DP03_0061E: 0,
+        DP05_0038PE: 40.7,
+        ALAND: 3064521,
+        DP03_0031PE: 4.9,
       },
     },
   ],
 };
+
+// UPDATE: After updating the arguments for philly tract to get stats and reordering
+// the variables, citysdk now only returns a single tract shape.  I am preserving how to use
+// jq to parse JSON files here just in case it is needed in the future.
+
 // CRITICAL: How to optimize searching this file so it is memory efficient?
-// Create a subset data file
 // Create file with just counties in Philly MSA -- e.g., Pennsylvania:
 /*
     cat src/paTracts.json | jq -c '[.features[] | select ( 
@@ -1113,8 +1271,9 @@ const phillyTractGeoJson = {
 // cat src/tract.json | jq '[.features[] | .properties | .GEOID]' > src/tractProps.geo.json
 // Get coordinates
 // cat src/tract.json | jq '[.features[] | {coordinates:.geometry.coordinates}]' > src/tractCoords.geo.json
-//Minifiy
+// Minify
 // jq -c . < src/tractCoords.geo.json > src/tractCoordsMinified.geo.json
+// https://nodejs.org/api/fs.html
 
 const singleTractShape = {
   type: "FeatureCollection",
