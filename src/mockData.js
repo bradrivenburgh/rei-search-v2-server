@@ -1164,7 +1164,7 @@ const phillyMSAGeoJson = {
   ],
 };
 
-phillyTractGeoJson = {
+defaultTractGeoJson = {
   type: "FeatureCollection",
   features: [
     {
@@ -1641,7 +1641,7 @@ module.exports = {
   fakeProps,
   savedProps,
   phillyMSAGeoJson,
-  phillyTractGeoJson,
+  defaultTractGeoJson,
   philadelphiaPlaceGeoJson,
   singleTractShape,
 };

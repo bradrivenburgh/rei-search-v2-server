@@ -9,7 +9,7 @@ const {
   fakeStats,
   fakeProps,
   phillyMSAGeoJson,
-  phillyTractGeoJson,
+  defaultTractGeoJson,
   savedProps,
 } = require("./mockData");
 const fetch = require("node-fetch");
@@ -137,19 +137,63 @@ app.get("/api/", (req, res) => {
       })
       .then((geoTags) => {
 
+        // const countyArgs = {
+        //   vintage: 2018,
+        //   geoHierarchy: {
+        //     state: geoTags.stateGeoid,
+        //     county: geoTags.countyGeoid,
+        //   },
+        //   geoResolution: "5m",
+        //   sourcePath: ["cbp"],
+        //   values: ["EMP"],
+        //   statsKey: CENSUS_API_KEY,
+        // };
+
         const countyArgs = {
-          vintage: 2018,
+          sourcePath: ["acs", "acs5", "profile"],
+          vintage: 2019,
+          values: [
+            "DP05_0001E",
+            "DP03_0027PE",
+            "DP03_0028PE",
+            "DP03_0029PE",
+            "DP03_0030PE",
+            "DP03_0031PE",
+            "DP03_0033PE",
+            "DP03_0034PE",
+            "DP03_0035PE",
+            "DP03_0036PE",
+            "DP03_0037PE",
+            "DP03_0038PE",
+            "DP03_0039PE",
+            "DP03_0040PE",
+            "DP03_0041PE",
+            "DP03_0042PE",
+            "DP03_0043PE",
+            "DP03_0044PE",
+            "DP03_0045PE",
+            "DP03_0061E",
+            "DP04_0126E",
+            "DP04_0080E",
+            "DP05_0018E",
+            "DP05_0039PE",
+            "DP05_0044PE",
+            "DP05_0038PE",
+            "DP05_0052PE",
+            "DP05_0037PE",
+            "DP03_0004PE",
+            "DP03_0005PE",
+          ],
           geoHierarchy: {
             state: geoTags.stateGeoid,
             county: geoTags.countyGeoid,
           },
           geoResolution: "5m",
-          sourcePath: ["cbp"],
-          values: ["EMP"],
           statsKey: CENSUS_API_KEY,
         };
 
-        const censusTractArgs = {
+
+        const tractArgs = {
           sourcePath: ["acs", "acs5", "profile"],
           vintage: 2019,
           values: [
@@ -211,7 +255,7 @@ app.get("/api/", (req, res) => {
           });
         }
 
-        function censusTractPromise(args = censusTractArgs) {
+        function censusTractPromise(args = tractArgs) {
           return new Promise((resolve, reject) => {
             census(args, (err, json) => {
               if (!err) {
@@ -240,7 +284,7 @@ app.get("/api/", (req, res) => {
             // Check if searched location is in MSA; if not replace with default 
             // location / stats; set badRequest to true
             if (!isInMSA) {
-              values[2] = phillyTractGeoJson;
+              values[2] = defaultTractGeoJson;
               badRequest = true;
             }
 
