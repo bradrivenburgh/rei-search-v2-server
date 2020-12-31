@@ -252,9 +252,9 @@ app.get("/api/", (req, res) => {
               tractStats: values[2],
               fakeStats,
               fakeProps,
-              philadelphiaPlaceGeoJson: values[0],
               phillyMSAGeoJson,
-              phillyTractGeoJson: values[2],
+              countyGeoJson: values[0],
+              tractGeoJson: values[2],
 
             });
           })
