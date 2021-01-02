@@ -1186,6 +1186,8 @@ const phillyMSAGeoJson = {
         DP05_0044PE: 5.9,
         DP05_0038PE: 21.0,
         DP05_0052PE: 0.0,
+        DP05_0057PE: 3.4,
+        DP05_0058PE: 2.8,
         DP05_0037PE: 66.6,
         DP03_0004PE: 61.2,
         DP03_0005PE: 4.0,
@@ -1484,6 +1486,7 @@ const defaultCounty = {
 
 module.exports = {
   fakeStats,
+  statsTemplate,
   fakeProps,
   savedProps,
   phillyMSAGeoJson,

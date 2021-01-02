@@ -13,6 +13,7 @@ const {
   defaultTract,
   savedProps,
 } = require("./mockData");
+const { transformStats } = require('./transformStats')
 const fetch = require("node-fetch");
 const {
   CENSUS_API_KEY,
@@ -166,6 +167,8 @@ app.get("/api/", (req, res) => {
           "DP05_0044PE",
           "DP05_0038PE",
           "DP05_0052PE",
+          "DP05_0057PE",
+          "DP05_0058PE",
           "DP05_0037PE",
           "DP03_0004PE",
           "DP03_0005PE",
@@ -249,6 +252,16 @@ app.get("/api/", (req, res) => {
               badRequest = true;
             }
 
+            const statsObject = {
+              msa: phillyMSAGeoJson.features[0].properties,
+              county: values[0].features[0].properties,
+              tract: values[2].features[0].properties,
+            }
+
+            const transformedStats = transformStats(statsObject);
+            console.log(transformedStats.demographic[2])
+
+            
             res.json({
               badRequest,
               apiStatistics: {
