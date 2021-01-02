@@ -2,12 +2,15 @@
 const transformStats = (statistics) => {
   const { msa, county, tract } = statistics;
 
-
+  const currencyFormatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2
+  });
 
   return {
     economic: [
       {
-        id: 1,
         statistic: "Price-to-rent ratio",
         advisory: "(Lower is better)",
         CT: "18.00",
@@ -15,14 +18,18 @@ const transformStats = (statistics) => {
         MSA: "18.30",
       },
       {
-        id: 2,
-        statistic: "Median income",
-        CT: "$40,000",
-        CTY: "$40,000",
-        MSA: "$40,000",
+        statistic: "Rental vacancy rate",
+        CT: `${tract.DP04_0005E}%`,
+        CTY: `${county.DP04_0005E}%`,
+        MSA: `${msa.DP04_0005E}%`,
       },
       {
-        id: 3,
+        statistic: "Median household income",
+        CT: currencyFormatter.format(tract.DP03_0062E),
+        CTY: currencyFormatter.format(county.DP03_0062E),
+        MSA: currencyFormatter.format(msa.DP03_0062E),
+      },
+      {
         statistic: "Top three sectors",
         advisory: "(Ordered by percentage of working population employed)",
         CT: [
@@ -42,7 +49,6 @@ const transformStats = (statistics) => {
         ],
       },
       {
-        id: 4,
         statistic: "Top three occupations",
         advisory: "(Ordered by percentage of working population in occupation)",
         CT: [
@@ -65,7 +71,6 @@ const transformStats = (statistics) => {
   
     demographic: [
       {
-        id: 1,
         statistic: "Population growth rate",
         advisory: "(Higher is better)",
         CT: "2.18%",
@@ -73,14 +78,12 @@ const transformStats = (statistics) => {
         MSA: "2.00%",
       },
       {
-        id: 2,
         statistic: "Median age",
-        CT: tract.DP05_0018E,
-        CTY: county.DP05_0018E,
-        MSA: msa.DP05_0018E,
+        CT: `${tract.DP05_0018E}`,
+        CTY: `${county.DP05_0018E}`,
+        MSA: `${msa.DP05_0018E}`,
       },
       {
-        id: 3,
         statistic: "Race and ethnicity",
         CT: [
           `American Indian (${tract.DP05_0039PE}%)`,
@@ -108,11 +111,10 @@ const transformStats = (statistics) => {
         ],
       },
       {
-        id: 4,
-        statistic: "Employment status",
-        CT: ["Employed (##%)", "Unemployed (##%)"],
-        CTY: ["Employed (##%)", "Unemployed (##%)"],
-        MSA: ["Employed (##%)", "Unemployed (##%)"],
+        statistic: "Unemployment rate",
+        CT: `${tract.DP03_0009PE}%`,
+        CTY: `${county.DP03_0009PE}%`,
+        MSA: `${msa.DP03_0009PE}%`,
       },
     ],  
   };

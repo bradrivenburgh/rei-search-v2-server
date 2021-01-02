@@ -170,8 +170,8 @@ app.get("/api/", (req, res) => {
           "DP05_0057PE",
           "DP05_0058PE",
           "DP05_0037PE",
-          "DP03_0004PE",
-          "DP03_0005PE",
+          "DP03_0009PE",
+          "DP04_0005E",
         ]
           
         const countyArgs = {
@@ -259,7 +259,8 @@ app.get("/api/", (req, res) => {
             }
 
             const transformedStats = transformStats(statsObject);
-            console.log(transformedStats.demographic[2])
+            console.log(transformedStats.economic[2])
+            console.log(transformedStats.demographic[1])
 
             
             res.json({
