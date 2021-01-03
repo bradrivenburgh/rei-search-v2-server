@@ -252,24 +252,15 @@ app.get("/api/", (req, res) => {
               badRequest = true;
             }
 
-            const statsObject = {
+            const statistics = {
               msa: phillyMSAGeoJson.features[0].properties,
               county: values[0].features[0].properties,
               tract: values[2].features[0].properties,
             }
-
-            const transformedStats = transformStats(statsObject);
-            console.log(transformedStats.economic[0])
-            console.log(transformedStats.demographic[1])
-
             
             res.json({
               badRequest,
-              apiStatistics: {
-                msaStats: phillyMSAGeoJson.features[0].properties,
-                countyStats: values[0].features[0].properties,
-                tractStats: values[2].features[0].properties,
-              },
+              apiStatistics: transformStats(statistics),
               fakeStats,
               fakeProps,
               msa: phillyMSAGeoJson,
