@@ -15,21 +15,13 @@ const transformStats = (statistics) => {
    * @param {object} geography
    * @param {object} dictionary
    */
-  const getTopThree = (geography, dictionary) => {
-    const keyArr = Object.keys(dictionary);
-    const filtered = Object.entries(geography)
-      .filter((entry) => {
-        if (keyArr.includes(entry[0])) {
-          entry[0] = dictionary[entry[0]];
-          return entry;
-        }
-      })
-      .sort((a, b) => b[1] - a[1]);
+  const getTopThree = (dictionary) => {
+    const sorted = Object.entries(dictionary).sort((a, b) => b[1] - a[1]);
 
     return {
-      first: `${filtered[0][0]} (${filtered[0][1]}%)`,
-      second: `${filtered[1][0]} (${filtered[1][1]}%)`,
-      third: `${filtered[2][0]} (${filtered[2][1]}%)`,
+      first: `${sorted[0][0]} (${sorted[0][1]}%)`,
+      second: `${sorted[1][0]} (${sorted[1][1]}%)`,
+      third: `${sorted[2][0]} (${sorted[2][1]}%)`,
     };
   };
 
@@ -39,25 +31,26 @@ const transformStats = (statistics) => {
    */
   const topIndustries = (geography) => {
     const industries = {
-      DP03_0033PE: "Agriculture, forestry, fishing and hunting, and mining",
-      DP03_0034PE: "Construction",
-      DP03_0035PE: "Manufacturing",
-      DP03_0036PE: "Wholesale trade",
-      DP03_0037PE: "Retail trade",
-      DP03_0038PE: "Transportation and warehousing, and utilities",
-      DP03_0039PE: "Information",
-      DP03_0040PE:
-        "Finance and insurance, and real estate and rental and leasing",
-      DP03_0041PE:
-        "Professional, scientific, and management, and administrative and waste management services",
-      DP03_0042PE:
-        "Educational services, and health care and social assistance",
-      DP03_0043PE:
-        "Arts, entertainment, and recreation, and accommodation and food services",
-      DP03_0044PE: "Other services, except public administration",
-      DP03_0045PE: "Public administration",
+      "Agriculture, forestry, fishing and hunting, and mining":
+        geography.DP03_0033PE,
+      Construction: geography.DP03_0034PE,
+      Manufacturing: geography.DP03_0035PE,
+      "Wholesale trade": geography.DP03_0036PE,
+      "Retail trade": geography.DP03_0037PE,
+      "Transportation and warehousing, and utilities": geography.DP03_0038PE,
+      Information: geography.DP03_0039PE,
+      "Finance and insurance, and real estate and rental and leasing":
+        geography.DP03_0040PE,
+      "Professional, scientific, and management, and administrative and waste management services":
+        geography.DP03_0041PE,
+      "Educational services, and health care and social assistance":
+        geography.DP03_0042PE,
+      "Arts, entertainment, and recreation, and accommodation and food services":
+        geography.DP03_0043PE,
+      "Other services, except public administration": geography.DP03_0044PE,
+      "Public administration": geography.DP03_0045PE,
     };
-    return getTopThree(geography, industries);
+    return getTopThree(industries);
   };
 
   /**
@@ -66,15 +59,16 @@ const transformStats = (statistics) => {
    */
   const topOccupations = (geography) => {
     const occupations = {
-      DP03_0027PE: "Management, business, science, and arts occupations",
-      DP03_0028PE: "Service occupations",
-      DP03_0029PE: "Sales and office occupations",
-      DP03_0030PE:
-        "Natural resources, construction, and maintenance occupations",
-      DP03_0031PE:
-        "Production, transportation, and material moving occupations",
+      "Management, business, science, and arts occupations":
+        geography.DP03_0027PE,
+      "Service occupations": geography.DP03_0028PE,
+      "Sales and office occupations": geography.DP03_0029PE,
+      "Natural resources, construction, and maintenance occupations":
+        geography.DP03_0030PE,
+      "Production, transportation, and material moving occupations":
+        geography.DP03_0031PE,
     };
-    return getTopThree(geography, occupations);
+    return getTopThree(occupations);
   };
 
   const topThreeIndustries = {
@@ -109,8 +103,9 @@ const transformStats = (statistics) => {
     );
     const averageTotalPopulation =
       popDiff.reduce((acc, cv) => acc + cv.populationTotal, 0) / popDiff.length;
-    return ((cumulativeGrowthOrDecline / averageTotalPopulation) * 100)
-      .toFixed(2);
+    return ((cumulativeGrowthOrDecline / averageTotalPopulation) * 100).toFixed(
+      2
+    );
   }
 
   return {
