@@ -138,7 +138,7 @@ app.get("/api/", (req, res) => {
       })
       .then((geoTags) => {
 
-        const statsVars = [
+        const acsVars = [
           "DP05_0001E",
           "DP03_0027PE",
           "DP03_0028PE",
@@ -173,10 +173,10 @@ app.get("/api/", (req, res) => {
           "DP04_0005E",
         ]
           
-        const countyArgs = {
+        const countyAcsArgs = {
           sourcePath: ["acs", "acs5", "profile"],
           vintage: 2019,
-          values: statsVars,
+          values: acsVars,
           geoHierarchy: {
             state: geoTags.stateGeoid,
             county: geoTags.countyGeoid,
@@ -186,10 +186,10 @@ app.get("/api/", (req, res) => {
         };
 
 
-        const tractArgs = {
+        const tractAcsArgs = {
           sourcePath: ["acs", "acs5", "profile"],
           vintage: 2019,
-          values: statsVars,
+          values: acsVars,
           geoHierarchy: {
             state: geoTags.stateGeoid,
             county: geoTags.countyGeoid,
@@ -205,7 +205,7 @@ app.get("/api/", (req, res) => {
           });
         }
 
-        function countyPromise(args = countyArgs) {
+        function countyAcs(args = countyAcsArgs) {
           return new Promise((resolve, reject) => {
             census(args, (err, json) => {
               if (!err) {
@@ -217,7 +217,7 @@ app.get("/api/", (req, res) => {
           });
         }
 
-        function censusTractPromise(args = tractArgs) {
+        function ctAcsPromise(args = tractAcsArgs) {
           return new Promise((resolve, reject) => {
             census(args, (err, json) => {
               if (!err) {
@@ -230,7 +230,7 @@ app.get("/api/", (req, res) => {
         }
 
 
-        Promise.all([countyPromise(), censusGeoids(), censusTractPromise()])
+        Promise.all([countyAcs(), censusGeoids(), ctAcsPromise()])
           .then((values) => {
 
             const msaLocations = {
