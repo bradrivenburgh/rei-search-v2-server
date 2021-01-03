@@ -1,13 +1,88 @@
-
 const transformStats = (statistics) => {
   const { msa, county, tract } = statistics;
 
-  const currencyFormatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2
+  // Format values representing dollars
+  const currencyFormatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
   });
 
+  /**
+   * Helper function that takes the Census data and a dictionary
+   * of Census variable name equivalents and returns the top three
+   * by value in descending order.
+   * @param {object} geography 
+   * @param {object} dictionary 
+   */
+  const getTopThree = (geography, dictionary) => {
+    const keyArr = Object.keys(dictionary);
+    const filtered = Object.entries(geography)
+      .filter((entry) => {
+        if (keyArr.includes(entry[0])) {
+          entry[0] = dictionary[entry[0]];
+          return entry;
+        }
+      })
+      .sort((a, b) => b[1] - a[1]);
+
+    return {
+      first: `${filtered[0][0]} (${filtered[0][1]}%)`,
+      second: `${filtered[1][0]} (${filtered[1][1]}%)`,
+      third: `${filtered[2][0]} (${filtered[2][1]}%)`,
+    };
+  };
+
+  /**
+   * Return the top industries for a given geography
+   * @param {object} geography 
+   */
+  const topIndustries = (geography) => {
+    const industries = {
+      DP03_0033PE: "Agriculture, forestry, fishing and hunting, and mining",
+      DP03_0034PE: "Construction",
+      DP03_0035PE: "Manufacturing",
+      DP03_0036PE: "Wholesale trade",
+      DP03_0037PE: "Retail trade",
+      DP03_0038PE: "Transportation and warehousing, and utilities",
+      DP03_0039PE: "Information",
+      DP03_0040PE: "Finance and insurance, and real estate and rental and leasing",
+      DP03_0041PE: "Professional, scientific, and management, and administrative and waste management services",
+      DP03_0042PE: "Educational services, and health care and social assistance",
+      DP03_0043PE: "Arts, entertainment, and recreation, and accommodation and food services",
+      DP03_0044PE: "Other services, except public administration",
+      DP03_0045PE: "Public administration",
+    }
+    return getTopThree(geography, industries);
+  };
+
+    /**
+   * Return the top occupations for a given geography
+   * @param {object} geography 
+   */
+  const topOccupations = (geography) => {
+    const occupations = {
+      DP03_0027PE: "Management, business, science, and arts occupations",
+      DP03_0028PE: "Service occupations",
+      DP03_0029PE: "Sales and office occupations",
+      DP03_0030PE: "Natural resources, construction, and maintenance occupations",
+      DP03_0031PE: "Production, transportation, and material moving occupations",
+    }
+    return getTopThree(geography, occupations)
+  }
+
+  const topThreeIndustries = {
+    tract: topIndustries(tract),
+    county: topIndustries(county),
+    msa: topIndustries(msa),
+  }
+
+  const topThreeOccupations = {
+    tract: topOccupations(tract),
+    county: topOccupations(county),
+    msa: topOccupations(msa),
+  }
+  
   return {
     economic: [
       {
@@ -33,42 +108,42 @@ const transformStats = (statistics) => {
         statistic: "Top three sectors",
         advisory: "(Ordered by percentage of working population employed)",
         CT: [
-          "Health care and social assistance (19.29%)",
-          "Retail trade (18.29%)",
-          "Accommodation and food services (8.75%)",
+          topThreeIndustries.tract.first,
+          topThreeIndustries.tract.second,
+          topThreeIndustries.tract.third,
         ],
         CTY: [
-          "Health care and social assistance (19.29%)",
-          "Retail trade (18.29%)",
-          "Accommodation and food services (8.75%)",
+          topThreeIndustries.county.first,
+          topThreeIndustries.county.second,
+          topThreeIndustries.county.third,
         ],
         MSA: [
-          "Health care and social assistance (19.29%)",
-          "Retail trade (18.29%)",
-          "Accommodation and food services (8.75%)",
+          topThreeIndustries.msa.first,
+          topThreeIndustries.msa.second,
+          topThreeIndustries.msa.third,
         ],
       },
       {
         statistic: "Top three occupations",
         advisory: "(Ordered by percentage of working population in occupation)",
         CT: [
-          "Health care and social assistance (19.29%)",
-          "Retail trade (18.29%)",
-          "Accommodation and food services (8.75%)",
+          topThreeOccupations.tract.first,
+          topThreeOccupations.tract.second,
+          topThreeOccupations.tract.third,
         ],
         CTY: [
-          "Health care and social assistance (19.29%)",
-          "Retail trade (18.29%)",
-          "Accommodation and food services (8.75%)",
+          topThreeOccupations.county.first,
+          topThreeOccupations.county.second,
+          topThreeOccupations.county.third,
         ],
         MSA: [
-          "Health care and social assistance (19.29%)",
-          "Retail trade (18.29%)",
-          "Accommodation and food services (8.75%)",
+          topThreeOccupations.msa.first,
+          topThreeOccupations.msa.second,
+          topThreeOccupations.msa.third,
         ],
       },
     ],
-  
+
     demographic: [
       {
         statistic: "Population growth rate",
@@ -116,12 +191,10 @@ const transformStats = (statistics) => {
         CTY: `${county.DP03_0009PE}%`,
         MSA: `${msa.DP03_0009PE}%`,
       },
-    ],  
+    ],
   };
-
 };
 
 module.exports = {
-  transformStats
-}
-
+  transformStats,
+};

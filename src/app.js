@@ -259,7 +259,7 @@ app.get("/api/", (req, res) => {
             }
 
             const transformedStats = transformStats(statsObject);
-            console.log(transformedStats.economic[2])
+            console.log(transformedStats.economic[3])
             console.log(transformedStats.demographic[1])
 
             
