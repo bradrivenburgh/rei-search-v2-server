@@ -199,6 +199,18 @@ app.get("/api/", (req, res) => {
           statsKey: CENSUS_API_KEY,
         };
 
+        const countyPepArgs = {
+          sourcePath: ["pep", "population"],
+          vintage: 2019,
+          values: ["DATE_CODE", "DATE_DESC", "POP"],
+          geoHierarchy: {
+            state: geoTags.stateGeoid,
+            county: geoTags.countyGeoid,
+          },
+          statsKey: CENSUS_API_KEY,
+        };
+
+
         function censusGeoids() {
           return new Promise((resolve, reject) => {
             resolve(geoTags.fipsCodes)
@@ -206,6 +218,18 @@ app.get("/api/", (req, res) => {
         }
 
         function countyAcs(args = countyAcsArgs) {
+          return new Promise((resolve, reject) => {
+            census(args, (err, json) => {
+              if (!err) {
+                resolve(json);
+              } else {
+                reject(err);
+              }
+            });
+          });
+        }
+
+        function countyPep(args = countyPepArgs) {
           return new Promise((resolve, reject) => {
             census(args, (err, json) => {
               if (!err) {
@@ -229,8 +253,7 @@ app.get("/api/", (req, res) => {
           });
         }
 
-
-        Promise.all([countyAcs(), censusGeoids(), ctAcsPromise()])
+        Promise.all([countyAcs(), censusGeoids(), ctAcsPromise(), countyPep()])
           .then((values) => {
 
             const msaLocations = {
@@ -254,6 +277,7 @@ app.get("/api/", (req, res) => {
             const statistics = {
               msa: phillyMSAGeoJson.features[0].properties,
               county: values[0].features[0].properties,
+              countyPep: values[3],
               tract: values[2].features[0].properties,
             }
             

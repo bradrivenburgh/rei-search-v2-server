@@ -1,5 +1,5 @@
 const transformStats = (statistics) => {
-  const { msa, county, tract } = statistics;
+  const { msa, county, countyPep, tract } = statistics;
 
   // Format values representing dollars
   const currencyFormatter = new Intl.NumberFormat("en-US", {
@@ -95,6 +95,24 @@ const transformStats = (statistics) => {
       .toString();
   };
 
+  function calcPopStats(popStats) {
+    const popDiff = [];
+    for (let i = 0; i < popStats.length - 1; i++) {
+      popDiff.push({
+        growthOrDecline: popStats[i + 1]["POP"] - popStats[i]["POP"],
+        populationTotal: parseInt(popStats[i]["POP"]),
+      });
+    }
+    const cumulativeGrowthOrDecline = popDiff.reduce(
+      (acc, cv) => acc + cv.growthOrDecline,
+      0
+    );
+    const averageTotalPopulation =
+      popDiff.reduce((acc, cv) => acc + cv.populationTotal, 0) / popDiff.length;
+    return ((cumulativeGrowthOrDecline / averageTotalPopulation) * 100)
+      .toFixed(2);
+  }
+
   return {
     economic: [
       {
@@ -160,9 +178,9 @@ const transformStats = (statistics) => {
       {
         statistic: "Population growth rate",
         advisory: "(Higher is better)",
-        CT: "2.18%",
-        CTY: "2.40%",
-        MSA: "2.00%",
+        CT: "N/A",
+        CTY: `${calcPopStats(countyPep)}%`,
+        MSA: "2.18%",
       },
       {
         statistic: "Median age",
