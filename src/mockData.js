@@ -1,119 +1,8 @@
 const { STREETVIEW_API_KEY, STREETVIEW_SIGNATURE } = require("./config"); //Get Google Streetview keys
 
-const statsTemplate = {
-  economic: [
-    {
-      id: 1,
-      statistic: "Price-to-rent ratio",
-      advisory: "(Lower is better)",
-      CT: "18.00",
-      MSA: "18.20",
-      USA: "18.30",
-    },
-    {
-      id: 2,
-      statistic: "Median income",
-      CT: "$40,000",
-      MSA: "$40,000",
-      USA: "$40,000",
-    },
-    {
-      id: 3,
-      statistic: "Top three sectors",
-      advisory: "(Ordered by percentage of working population employed)",
-      CT: [
-        "Health care and social assistance (19.29%)",
-        "Retail trade (18.29%)",
-        "Accommodation and food services (8.75%)",
-      ],
-      MSA: [
-        "Health care and social assistance (19.29%)",
-        "Retail trade (18.29%)",
-        "Accommodation and food services (8.75%)",
-      ],
-      USA: [
-        "Health care and social assistance (19.29%)",
-        "Retail trade (18.29%)",
-        "Accommodation and food services (8.75%)",
-      ],
-    },
-    {
-      id: 4,
-      statistic: "Top three occupations",
-      advisory: "(Ordered by percentage of working population in occupation)",
-      CT: [
-        "Health care and social assistance (19.29%)",
-        "Retail trade (18.29%)",
-        "Accommodation and food services (8.75%)",
-      ],
-      MSA: [
-        "Health care and social assistance (19.29%)",
-        "Retail trade (18.29%)",
-        "Accommodation and food services (8.75%)",
-      ],
-      USA: [
-        "Health care and social assistance (19.29%)",
-        "Retail trade (18.29%)",
-        "Accommodation and food services (8.75%)",
-      ],
-    },
-  ],
-
-  demographic: [
-    {
-      id: 1,
-      statistic: "Population growth rate",
-      advisory: "(Higher is better)",
-      CT: "2.18%",
-      MSA: "2.40%",
-      USA: "2.00%",
-    },
-    {
-      id: 2,
-      statistic: "Median age",
-      CT: "34",
-      MSA: "35",
-      USA: "36",
-    },
-    {
-      id: 3,
-      statistic: "Race and ethnicity",
-      CT: [
-        "American Indian (##%)",
-        "Asian (##%)",
-        "Black (##%)",
-        "Pacific Islander (##%)",
-        "White (##%)",
-      ],
-      MSA: [
-        "American Indian (##%)",
-        "Asian (##%)",
-        "Black (##%)",
-        "Pacific Islander (##%)",
-        "White (##%)",
-      ],
-      USA: [
-        "American Indian (##%)",
-        "Asian (##%)",
-        "Black (##%)",
-        "Pacific Islander (##%)",
-        "White (##%)",
-      ],
-    },
-    {
-      id: 4,
-      statistic: "Employment status",
-      CT: ["Employed (##%)", "Unemployed (##%)"],
-      MSA: ["Employed (##%)", "Unemployed (##%)"],
-      USA: ["Employed (##%)", "Unemployed (##%)"],
-    },
-  ],
-};
-
 const fakeStats = {
   economic: [
     {
-      id: 1,
       statistic: "Price-to-rent ratio",
       advisory: "(Lower is better)",
       CT: "18.00",
@@ -121,14 +10,12 @@ const fakeStats = {
       MSA: "18.30",
     },
     {
-      id: 2,
       statistic: "Median income",
       CT: "$40,000",
       CTY: "$40,000",
       MSA: "$40,000",
     },
     {
-      id: 3,
       statistic: "Top three sectors",
       advisory: "(Ordered by percentage of working population employed)",
       CT: [
@@ -148,7 +35,6 @@ const fakeStats = {
       ],
     },
     {
-      id: 4,
       statistic: "Top three occupations",
       advisory: "(Ordered by percentage of working population in occupation)",
       CT: [
@@ -171,7 +57,6 @@ const fakeStats = {
 
   demographic: [
     {
-      id: 1,
       statistic: "Population growth rate",
       advisory: "(Higher is better)",
       CT: "2.18%",
@@ -179,14 +64,12 @@ const fakeStats = {
       MSA: "2.00%",
     },
     {
-      id: 2,
       statistic: "Median age",
       CT: "34",
       CTY: "35",
       MSA: "36",
     },
     {
-      id: 3,
       statistic: "Race and ethnicity",
       CT: [
         "American Indian (##%)",
@@ -211,7 +94,6 @@ const fakeStats = {
       ],
     },
     {
-      id: 4,
       statistic: "Employment status",
       CT: ["Employed (##%)", "Unemployed (##%)"],
       CTY: ["Employed (##%)", "Unemployed (##%)"],
@@ -1486,7 +1368,6 @@ const defaultCounty = {
 
 module.exports = {
   fakeStats,
-  statsTemplate,
   fakeProps,
   savedProps,
   phillyMSAGeoJson,

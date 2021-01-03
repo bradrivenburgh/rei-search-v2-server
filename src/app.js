@@ -6,7 +6,6 @@ const cors = require("cors");
 const helmet = require("helmet");
 const census = require("citysdk");
 const {
-  fakeStats,
   fakeProps,
   phillyMSAGeoJson,
   defaultCounty,
@@ -261,7 +260,6 @@ app.get("/api/", (req, res) => {
             res.json({
               badRequest,
               apiStatistics: transformStats(statistics),
-              fakeStats,
               fakeProps,
               msa: phillyMSAGeoJson,
               county: values[0],
