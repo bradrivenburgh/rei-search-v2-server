@@ -12,8 +12,8 @@ const transformStats = (statistics) => {
    * Helper function that takes the Census data and a dictionary
    * of Census variable name equivalents and returns the top three
    * by value in descending order.
-   * @param {object} geography 
-   * @param {object} dictionary 
+   * @param {object} geography
+   * @param {object} dictionary
    */
   const getTopThree = (geography, dictionary) => {
     const keyArr = Object.keys(dictionary);
@@ -35,7 +35,7 @@ const transformStats = (statistics) => {
 
   /**
    * Return the top industries for a given geography
-   * @param {object} geography 
+   * @param {object} geography
    */
   const topIndustries = (geography) => {
     const industries = {
@@ -46,51 +46,63 @@ const transformStats = (statistics) => {
       DP03_0037PE: "Retail trade",
       DP03_0038PE: "Transportation and warehousing, and utilities",
       DP03_0039PE: "Information",
-      DP03_0040PE: "Finance and insurance, and real estate and rental and leasing",
-      DP03_0041PE: "Professional, scientific, and management, and administrative and waste management services",
-      DP03_0042PE: "Educational services, and health care and social assistance",
-      DP03_0043PE: "Arts, entertainment, and recreation, and accommodation and food services",
+      DP03_0040PE:
+        "Finance and insurance, and real estate and rental and leasing",
+      DP03_0041PE:
+        "Professional, scientific, and management, and administrative and waste management services",
+      DP03_0042PE:
+        "Educational services, and health care and social assistance",
+      DP03_0043PE:
+        "Arts, entertainment, and recreation, and accommodation and food services",
       DP03_0044PE: "Other services, except public administration",
       DP03_0045PE: "Public administration",
-    }
+    };
     return getTopThree(geography, industries);
   };
 
-    /**
+  /**
    * Return the top occupations for a given geography
-   * @param {object} geography 
+   * @param {object} geography
    */
   const topOccupations = (geography) => {
     const occupations = {
       DP03_0027PE: "Management, business, science, and arts occupations",
       DP03_0028PE: "Service occupations",
       DP03_0029PE: "Sales and office occupations",
-      DP03_0030PE: "Natural resources, construction, and maintenance occupations",
-      DP03_0031PE: "Production, transportation, and material moving occupations",
-    }
-    return getTopThree(geography, occupations)
-  }
+      DP03_0030PE:
+        "Natural resources, construction, and maintenance occupations",
+      DP03_0031PE:
+        "Production, transportation, and material moving occupations",
+    };
+    return getTopThree(geography, occupations);
+  };
 
   const topThreeIndustries = {
     tract: topIndustries(tract),
     county: topIndustries(county),
     msa: topIndustries(msa),
-  }
+  };
 
   const topThreeOccupations = {
     tract: topOccupations(tract),
     county: topOccupations(county),
     msa: topOccupations(msa),
-  }
-  
+  };
+
+  const priceToRentRatio = (geography) => {
+    return (geography.DP04_0089E / (geography.DP04_0134E * 12))
+      .toFixed(2)
+      .toString();
+  };
+
   return {
     economic: [
       {
         statistic: "Price-to-rent ratio",
         advisory: "(Lower is better)",
-        CT: "18.00",
-        CTY: "18.20",
-        MSA: "18.30",
+        CT: priceToRentRatio(tract),
+        CTY: priceToRentRatio(county),
+        MSA: priceToRentRatio(msa),
       },
       {
         statistic: "Rental vacancy rate",
