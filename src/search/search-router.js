@@ -2,19 +2,25 @@ const express = require("express");
 const fetch = require("node-fetch");
 const xss = require("xss");
 const { logger } = require("../logger");
-const { ValidationService } = require("../ValidationService");
 const census = require("citysdk");
 const { transformStats } = require("./transformStats");
 const {
-  fakeProps,
   phillyMSAGeoJson,
   defaultCounty,
   defaultTract,
   savedProps,
 } = require("../mockData");
 const { CENSUS_API_KEY, MAPBOX_API_KEY } = require("../config");
-
+const { ValidationService } = require("../ValidationService");
+const SearchService = require("./search-service");
 const searchRouter = express.Router();
+const knex = (req) => req.app.get('db');
+
+const serializeSearch = (query) => ({
+  query: xss(query)
+});
+
+
 
 searchRouter.route("/search").get((req, res, next) => {
   function formatQueryParams(params) {
@@ -152,7 +158,7 @@ searchRouter.route("/search").get((req, res, next) => {
 
         function censusGeoids() {
           return new Promise((resolve, reject) => {
-            resolve(geoTags.fipsCodes);
+            resolve(geoTags);
           });
         }
 
@@ -211,17 +217,19 @@ searchRouter.route("/search").get((req, res, next) => {
             };
             const { states, counties } = msaLocations;
             const isInMSA =
-              states.includes(values[1]["STATE"]) &&
-              counties.includes(values[1]["COUNTY"]);
+              states.includes(values[1].fipsCodes["STATE"]) &&
+              counties.includes(values[1].fipsCodes["COUNTY"]);
 
             // If the request falls outside of MSA
             let badRequest = false;
+            let searchLocation = `${values[1].lng},${values[1].lat}`;
 
             // Check if searched location is in MSA; if not replace with default
             // location / stats; set badRequest to true
             if (!isInMSA) {
               values[0] = defaultCounty;
               values[2] = defaultTract;
+              searchLocation = `-75.126666,40.010854`;
               badRequest = true;
             }
 
@@ -232,14 +240,21 @@ searchRouter.route("/search").get((req, res, next) => {
               tract: values[2].features[0].properties,
             };
 
-            res.json({
-              badRequest,
-              apiStatistics: transformStats(statistics),
-              fakeProps,
-              msa: phillyMSAGeoJson,
-              county: values[0],
-              tract: values[2],
-            });
+            SearchService.getProperties(knex(req), searchLocation).then(
+              (properties) => {
+                const simplifiedArr = properties.map(property => {
+                  return property.property;
+                });
+                res.json({
+                  badRequest,
+                  apiStatistics: transformStats(statistics),
+                  properties: simplifiedArr,
+                  msa: phillyMSAGeoJson,
+                  county: values[0],
+                  tract: values[2],
+                });
+              }
+            );
           })
           .catch((error) => {
             throw new Error(error);
