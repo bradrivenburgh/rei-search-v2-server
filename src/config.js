@@ -1,8 +1,8 @@
 module.exports = {
   PORT: process.env.PORT || 8000, 
   NODE_ENV: process.env.NODE_ENV || 'development',
-  DATABASE_URL: process.env.DATABASE_URL || "postgresql://postgres@localhost/reisearch",
-  TEST_DATABASE_URL: process.env.TEST_DATABASE_URL || "postgresql://postgres@localhost/reisearch-test",
+  DATABASE_URL: process.env.DATABASE_URL || "postgresql://brad@localhost/reisearch",
+  TEST_DATABASE_URL: process.env.TEST_DATABASE_URL || "postgresql://brad@localhost/reisearch_test",
   CLIENT_ORIGIN: 'https://rei-search-v2-client.vercel.app/',
   STREETVIEW_API_KEY: process.env.STREETVIEW_API_KEY,
   STREETVIEW_SIGNATURE: process.env.STREETVIEW_SIGNATURE,
