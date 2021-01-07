@@ -1,6 +1,6 @@
 BEGIN;
 
 DROP TABLE IF EXISTS properties;
-DROP TABLE IF EXISTS locations;
+DROP TABLE IF EXISTS coordinates;
 
 COMMIT;
