@@ -12,15 +12,13 @@ const {
 } = require("../mockData");
 const { CENSUS_API_KEY, MAPBOX_API_KEY } = require("../config");
 const { ValidationService } = require("../ValidationService");
+const { requiredDictionary, customInvalidPropsMessages } = require("../callerValidationData");
+
 const SearchService = require("./search-service");
 const searchRouter = express.Router();
 const knex = (req) => req.app.get('db');
 
-const serializeSearch = (query) => ({
-  query: xss(query)
-});
-
-
+const serializeSearch = (query) => xss(query);
 
 searchRouter.route("/search").get((req, res, next) => {
   function formatQueryParams(params) {
@@ -54,8 +52,15 @@ searchRouter.route("/search").get((req, res, next) => {
         throw new Error(response.statusText);
       })
       .then((data) => {
-        const lat = data.features[0].center[1];
-        const lng = data.features[0].center[0];
+        let lat, lng;
+        console.log(data)
+        if (data.features.length === 0) {
+          lat = 40.010854;
+          lng = -75.126666;
+        } else {
+          lat = data.features[0].center[1];
+          lng = data.features[0].center[0];  
+        }
 
         // Retrieve Census FIPS codes for the given coordinates
 
@@ -242,10 +247,10 @@ searchRouter.route("/search").get((req, res, next) => {
 
             SearchService.getProperties(knex(req), searchLocation).then(
               (properties) => {
-                const simplifiedArr = properties.map(property => {
+                const simplifiedArr = properties.map((property) => {
                   return property.property;
                 });
-                res.json({
+                 return res.json({
                   badRequest,
                   apiStatistics: transformStats(statistics),
                   properties: simplifiedArr,
@@ -261,10 +266,11 @@ searchRouter.route("/search").get((req, res, next) => {
           });
       })
       .catch((error) => {
+        logger.error(error);
         console.error(error);
       });
   }
-  getData(req.query.address);
+  getData(serializeSearch(req.query.address));
 });
 
 module.exports = searchRouter;
