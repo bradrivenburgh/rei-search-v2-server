@@ -51,7 +51,7 @@ searchRouter.route("/search").get((req, res, next) => {
       })
       .then((data) => {
         let lat, lng;
-        console.log(data)
+        // If the Mapbox geolocation does not find a location, then provide a default (Philadelphia)
         if (data.features.length === 0) {
           lat = 40.010854;
           lng = -75.126666;
