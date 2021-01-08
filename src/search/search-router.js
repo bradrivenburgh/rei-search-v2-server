@@ -11,8 +11,6 @@ const {
   savedProps,
 } = require("../mockData");
 const { CENSUS_API_KEY, MAPBOX_API_KEY } = require("../config");
-const { ValidationService } = require("../ValidationService");
-const { requiredDictionary, customInvalidPropsMessages } = require("../callerValidationData");
 
 const SearchService = require("./search-service");
 const searchRouter = express.Router();
