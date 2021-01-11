@@ -3,7 +3,7 @@ const knex = require("knex");
 const supertest = require("supertest");
 const app = require("../src/app");
 const { transformStats } = require('../src/search/transformStats');
-const { cannedResponse, makeMaliciousSearch } = require("./search.fixtures");
+const { cannedResponse, makeMaliciousSearch, countyPepValues } = require("./search.fixtures");
 
 describe("Search Endpoint", function () {
   let db;
@@ -41,11 +41,22 @@ describe("Search Endpoint", function () {
             expect(res.body.properties).to.have.lengthOf.at.least(1);
             expect(res.body.properties[1].address.city).to.equal("Philadelphia");
             expect(res.body.properties[1].address.state).to.equal("PA");
+
+            context('Given a valid response', () => {        
+              const statistics = {
+                msa: res.body.msa.features[0].properties,
+                county: res.body.county.features[0].properties,
+                countyPep: countyPepValues,
+                tract: res.body.tract.features[0].properties,
+              };
+        
+              it('transformStats transforms the Census data correctly', () => {
+                expect(res.body.apiStatistics).to.eql(transformStats(statistics))
+              })
+            });
+      
           });
       }).timeout(15000);
-
-
-
 
       // it.only('responds with 200 using stub', (done) => {
       //   this.get = sinon.stub(supertest(app), 'get');
@@ -60,11 +71,20 @@ describe("Search Endpoint", function () {
       // }).timeout(15000)
     });
 
-    context('Given a valid response, transformStats', () => {
-      it('transformStats returns the top three industries', () => {
-        const topThreeIndustries = cannedResponse.success.body.apiStatistics.economic[3];
-        console.log(topThreeIndustries);
-      })
+    context('Given the query "Medford, NJ"', () => {
+      it('responds with properties within 10k of the given coordinates in NJ', () => {
+        return supertest(app)
+          .get('/api/search')
+          .query('address=Medford, NJ')
+          .expect(200)
+          .then((res) => {
+            const properties = res.body.properties;
+            const state = properties.some(property => 
+              property.address.state === "NJ"
+            );
+            expect(state).to.equal(true);
+          })
+      }).timeout(15000)
     })
 
   });
