@@ -2,6 +2,7 @@ const { expect } = require("chai");
 const knex = require("knex");
 const supertest = require("supertest");
 const app = require("../src/app");
+const { transformStats } = require('../src/search/transformStats');
 const { cannedResponse, makeMaliciousSearch } = require("./search.fixtures");
 
 describe("Search Endpoint", function () {
@@ -58,5 +59,13 @@ describe("Search Endpoint", function () {
 
       // }).timeout(15000)
     });
+
+    context('Given a valid response, transformStats', () => {
+      it('transformStats returns the top three industries', () => {
+        const topThreeIndustries = cannedResponse.success.body.apiStatistics.economic[3];
+        console.log(topThreeIndustries);
+      })
+    })
+
   });
 });
