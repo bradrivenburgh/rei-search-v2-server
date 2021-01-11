@@ -35,9 +35,16 @@ describe("Search Endpoint", function () {
           .query('address=""')
           .expect(200)
           .then((res) => {
-            expect(res.badRequest).to.equal(false);
+            expect(res.body.apiStatistics.economic[1]["CT"]).to.have.lengthOf.at.least(1);
+            expect(res.body.apiStatistics.demographic[1]["CT"]).to.have.lengthOf.at.least(1);
+            expect(res.body.properties).to.have.lengthOf.at.least(1);
+            expect(res.body.properties[1].address.city).to.equal("Philadelphia");
+            expect(res.body.properties[1].address.state).to.equal("PA");
           });
       }).timeout(15000);
+
+
+
 
       // it.only('responds with 200 using stub', (done) => {
       //   this.get = sinon.stub(supertest(app), 'get');
