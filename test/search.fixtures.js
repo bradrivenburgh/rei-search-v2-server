@@ -3697,21 +3697,7 @@ const countyPepValues = [
   }
 ];
 
-function makeMaliciousSearch() {
-  const maliciousSearch = {
-    address: 'Naughty naughty very naughty <script>alert("xss");</script>',
-  }
-  const expectedSearch = {
-    address: 'Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;',
-  }
-  return {
-    maliciousSearch,
-    expectedSearch,
-  }
-}
-
 module.exports = {
   cannedResponse,
   countyPepValues,
-  makeMaliciousSearch,
 }
