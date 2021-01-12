@@ -60,4 +60,13 @@ favoritesRouter.route("/favorites/:id").get((req, res, next) => {
   res.json(serializeData(res.favorite));
 });
 
+favoritesRouter.route("/favorites/:id").delete((req, res, next) => {
+  const id = req.params.id;
+  FavoritesService.deleteFavorite(knex(req), id)
+    .then(() => {
+      res.status(204).end();
+    })
+    .catch(next);
+});
+
 module.exports = favoritesRouter;

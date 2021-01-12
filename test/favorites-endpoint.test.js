@@ -180,19 +180,19 @@ describe('Favorites Endpoint', function () {
       });
     });
   });
-
-  describe('DELETE /api/favorites/:id', () => {
-    context('given no folders in the database', () => {
+*/
+  describe.only('DELETE /api/favorites/:id', () => {
+    context('given no properties in the favorites table', () => {
       it('responds with 404', () => {
         const id = 123456;
         return supertest(app)
           .delete(`/api/favorites/${id}`)
         //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
-          .expect(404, { error: { message: `Folder does not exist` } })
+          .expect(404, { error: { message: `Property does not exist` } })
       });
     })
 
-    context('given the are folders in the database', () => {
+    context('given the are properties in the favorites table', () => {
       const testFavorites = makeFavoritesArray();
 
       beforeEach('insert favorites', () => {
@@ -203,8 +203,7 @@ describe('Favorites Endpoint', function () {
 
       it('responds with 204 and removes the folder', () => {
         const idToRemove = 2;
-        const serializedTestFavorites = testFavorites.map(camelCaseKeys);
-        const expectedFavorites = serializedTestFavorites
+        const expectedFavorites = testFavorites
           .filter(folder => folder.id !== idToRemove);
         return supertest(app)
           .delete(`/api/favorites/${idToRemove}`)
@@ -220,87 +219,4 @@ describe('Favorites Endpoint', function () {
     });
   });
 
-  describe('PATCH /api/favorites/:id', () => {
-    context('Given no folders', () => {
-      it('responds with 404', () => {
-        const id = 123456;
-        return supertest(app)
-          .patch(`/api/favorites/${id}`)
-        //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
-          .expect(404, { error: { message: `Folder does not exist` } })
-      });
-    });
-
-    context('Given there are folders in the database', () => {
-      const testFavorites = makeFavoritesArray();
-
-      beforeEach('insert favorites', () => {
-        return db
-          .into('favorites')
-          .insert(testFavorites)
-      });
-
-      it('responds with 204 and updates the folder', () => {
-        const idToUpdate = 2;
-        const updateFolder = {
-          property: 'updated folder_name',
-        };
-        const serializedUpdateFolder = camelCaseKeys(testFavorites[idToUpdate - 1]);
-        const expectedFavorite = {
-          ...serializedUpdateFolder,
-          ...updateFolder
-        };
-
-        return supertest(app)
-          .patch(`/api/favorites/${idToUpdate}`)
-        //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
-          .send(updateFolder)
-          .expect(204)
-          .then(res => {
-            return supertest(app)
-              .get(`/api/favorites/${idToUpdate}`)
-            //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
-              .expect(expectedFavorite)
-          });
-      });
-
-      it('responds with 400 when no required fields supplied', () => {
-        const idToUpdate = 2;
-        return supertest(app)
-          .patch(`/api/favorites/${idToUpdate}`)
-        //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
-          .send({ irrelevantField: 'foo' })
-          .expect(400, {
-            error: {
-              message: `Request body must contain: property`
-            }
-          });
-      });
-
-      it('responds with 204 when updating only a subset of fields', () => {
-        const idToUpdate = 2;
-        const updateFolder = {
-          property: 'updated folder folder_name'
-        };
-        const serializedUpdateFolder = camelCaseKeys(testFavorites[idToUpdate - 1]);
-        const expectedFavorite = {
-          ...serializedUpdateFolder,
-          ...updateFolder
-        };
-
-        return supertest(app)
-          .patch(`/api/favorites/${idToUpdate}`)
-        //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
-          .send({...updateFolder, fieldToIgnore: 'should not be in GET response'})
-          .expect(204)
-          .then(res => {
-            return supertest(app)
-              .get(`/api/favorites/${idToUpdate}`)
-            //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
-              .expect(expectedFavorite)
-          });
-      });
-    });
-  });
- */
  });
