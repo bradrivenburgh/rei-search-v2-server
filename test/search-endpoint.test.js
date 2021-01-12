@@ -22,7 +22,6 @@ describe("Search Endpoint", function () {
 
   describe(`GET /api/search`, () => {
     let api_response;
-    console.log = () => {};
 
     // context(`Given an empty query string`, () => {
     it("responds with 200 and defaults to statistics and properties in Philadelphia", () => {

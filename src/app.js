@@ -57,7 +57,7 @@ app.use(morgan(morganOption));
 // app.use(cors(corsOptions));
 app.use(cors());
 app.use(helmet());
-// app.use(express.json()); // Enable if using non-GET endpoints
+app.use(express.json());
 // app.use(validateBearerToken); // Enable after adding validation
 // Routers can go here
 app.use("/api/", searchRouter)
