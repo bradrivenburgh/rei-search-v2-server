@@ -29,12 +29,12 @@ describe('Favorites Endpoint', function () {
       it('responds with 200 and an empty list', () => {
         return supertest(app)
           .get('/api/favorites')
-          // .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+          //// .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
           .expect(200, []);
       });
     });
 
-    context.only(`Given there are properties in the favorites table `, () => {
+    context(`Given there are properties in the favorites table `, () => {
       const testFavorites = makeFavoritesArray();
 
       beforeEach('insert favorites', () => {
@@ -43,17 +43,17 @@ describe('Favorites Endpoint', function () {
           .insert(testFavorites)
       });
 
-      context(`Given an XSS attack folder`, () => {
+      context(`Given an XSS attack favorite`, () => {
         const { maliciousFavorite, expectedFavorite } = makeMaliciousFavorite();
 
-        beforeEach("insert malicious folder", () => {
+        beforeEach("insert malicious favorite", () => {
           return db.into("favorites").insert([maliciousFavorite]);
         });
 
         it("removes XSS attack content", () => {
           return supertest(app)
             .get(`/api/favorites`)
-          //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+          ////  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
             .expect(200)
             .expect((res) => {
               const insertedFavorite = res.body[res.body.length - 1];
@@ -62,47 +62,47 @@ describe('Favorites Endpoint', function () {
         });
       });
       
-      it(`responds with 200 and all of the folders`, () => {
+      it(`responds with 200 and all of the properties`, () => {
         return supertest(app)
           .get('/api/favorites')
-        //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+        ////  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
           .expect(200, testFavorites)
       });
     });
   
   });
-/* 
-  describe(`GET /api/noteful/folders/:folder_id`, () => {
-    context(`Given no folders`, () => {
+
+  describe(`GET /api/favorites/:id`, () => {
+    context(`Given no properties in the favorites table`, () => {
       it(`responds with 404`, () => {
-        const folderId = 123456;
+        const id = 123456;
         return supertest(app)
-          .get(`/api/noteful/folders/${folderId}`)
-          .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
-          .expect(404, { error: {  message: `Folder does not exist` } });
+          .get(`/api/favorites/${id}`)
+        //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+          .expect(404, { error: {  message: `Property does not exist` } });
       });
     });
 
-    context(`Given there are folders in the database`, () => {
+    context(`Given there are properties in the favorites table`, () => {
       const testFavorites = makeFavoritesArray();
 
-      beforeEach('insert folders', () => {
+      beforeEach('insert favorites', () => {
         return db
           .into('favorites')
           .insert(testFavorites)
       });
 
-      context(`Given an XSS attack folder`, () => {
+      context(`Given an XSS attack favorite`, () => {
         const { maliciousFavorite, expectedFavorite } = makeMaliciousFavorite();
 
-        beforeEach("insert malicious folder", () => {
+        beforeEach("insert malicious favorite", () => {
           return db.into("favorites").insert([maliciousFavorite]);
         });
 
         it("removes XSS attack content", () => {
           return supertest(app)
-            .get(`/api/noteful/folders/${maliciousFavorite.id}`)
-            .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+            .get(`/api/favorites/${maliciousFavorite.id}`)
+          //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
             .expect(200)
             .expect((res) => {
               expect(res.body.property).to.eql(expectedFavorite.property)
@@ -111,36 +111,36 @@ describe('Favorites Endpoint', function () {
       });
 
       it(`responds with 200 and the specified folder`, () => {
-        const folderId = 1;
-        const expectedFavorite = camelCaseKeys(testFavorites[folderId - 1]);
+        const id = 1;
+        const expectedFavorite = testFavorites[id - 1];
         return supertest(app)
-          .get(`/api/noteful/folders/${folderId}`)
-          .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+          .get(`/api/favorites/${id}`)
+        //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
           .expect(200, expectedFavorite)
       });
     });
   });
-
-  describe('POST /api/noteful/folders', () => {
+/*
+  describe('POST /api/favorites', () => {
     it('creates a folder, responding with 201 and the new folder', function () {
       const newFolder = {
         property: 'Test new folder',
       };
 
       return supertest(app)
-      .post('/api/noteful/folders')
-      .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+      .post('/api/favorites')
+    //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
       .send(newFolder)
       .expect(201)
       .expect(res => {
         expect(res.body.property).to.eql(newFolder.property);
         expect(res.body).to.have.property('id');
-        expect(res.headers.location).to.eql(`/api/noteful/folders/${res.body.id}`);
+        expect(res.headers.location).to.eql(`/api/favorites/${res.body.id}`);
       })
       .then(postRes => {
         return supertest(app)
-          .get(`/api/noteful/folders/${postRes.body.id}`)
-          .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+          .get(`/api/favorites/${postRes.body.id}`)
+        //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
           .expect(postRes.body)
       });
     });
@@ -155,8 +155,8 @@ describe('Favorites Endpoint', function () {
         delete newFolder[field];
 
         return supertest(app)
-          .post('/api/noteful/folders')
-          .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+          .post('/api/favorites')
+        //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
           .send(newFolder)
           .expect(400, {
             error: { message: `Required properties are missing: ${field}` }
@@ -164,14 +164,14 @@ describe('Favorites Endpoint', function () {
       });
     });
 
-    context(`Given an XSS attack folder`, () => {
+    context(`Given an XSS attack favorite`, () => {
       let { maliciousFavorite, expectedFavorite } = makeMaliciousFavorite();
       maliciousFavorite = camelCaseKeys(maliciousFavorite);
 
       it("removes XSS attack content", () => {
         return supertest(app)
-          .post(`/api/noteful/folders`)
-          .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+          .post(`/api/favorites`)
+        //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
           .send(maliciousFavorite)
           .expect(201)
           .expect((res) => {
@@ -181,13 +181,13 @@ describe('Favorites Endpoint', function () {
     });
   });
 
-  describe('DELETE /api/noteful/folders/:folder_id', () => {
+  describe('DELETE /api/favorites/:id', () => {
     context('given no folders in the database', () => {
       it('responds with 404', () => {
-        const folderId = 123456;
+        const id = 123456;
         return supertest(app)
-          .delete(`/api/noteful/folders/${folderId}`)
-          .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+          .delete(`/api/favorites/${id}`)
+        //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
           .expect(404, { error: { message: `Folder does not exist` } })
       });
     })
@@ -195,7 +195,7 @@ describe('Favorites Endpoint', function () {
     context('given the are folders in the database', () => {
       const testFavorites = makeFavoritesArray();
 
-      beforeEach('insert folders', () => {
+      beforeEach('insert favorites', () => {
         return db
           .into('favorites')
           .insert(testFavorites)
@@ -207,26 +207,26 @@ describe('Favorites Endpoint', function () {
         const expectedFavorites = serializedTestFavorites
           .filter(folder => folder.id !== idToRemove);
         return supertest(app)
-          .delete(`/api/noteful/folders/${idToRemove}`)
-          .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+          .delete(`/api/favorites/${idToRemove}`)
+        //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
           .expect(204)
           .then(res => {
             return supertest(app)
-              .get('/api/noteful/folders')
-              .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+              .get('/api/favorites')
+            //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
               .expect(expectedFavorites)
           });
       });
     });
   });
 
-  describe('PATCH /api/noteful/folders/:folder_id', () => {
+  describe('PATCH /api/favorites/:id', () => {
     context('Given no folders', () => {
       it('responds with 404', () => {
-        const folderId = 123456;
+        const id = 123456;
         return supertest(app)
-          .patch(`/api/noteful/folders/${folderId}`)
-          .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+          .patch(`/api/favorites/${id}`)
+        //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
           .expect(404, { error: { message: `Folder does not exist` } })
       });
     });
@@ -234,7 +234,7 @@ describe('Favorites Endpoint', function () {
     context('Given there are folders in the database', () => {
       const testFavorites = makeFavoritesArray();
 
-      beforeEach('insert folders', () => {
+      beforeEach('insert favorites', () => {
         return db
           .into('favorites')
           .insert(testFavorites)
@@ -252,14 +252,14 @@ describe('Favorites Endpoint', function () {
         };
 
         return supertest(app)
-          .patch(`/api/noteful/folders/${idToUpdate}`)
-          .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+          .patch(`/api/favorites/${idToUpdate}`)
+        //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
           .send(updateFolder)
           .expect(204)
           .then(res => {
             return supertest(app)
-              .get(`/api/noteful/folders/${idToUpdate}`)
-              .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+              .get(`/api/favorites/${idToUpdate}`)
+            //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
               .expect(expectedFavorite)
           });
       });
@@ -267,8 +267,8 @@ describe('Favorites Endpoint', function () {
       it('responds with 400 when no required fields supplied', () => {
         const idToUpdate = 2;
         return supertest(app)
-          .patch(`/api/noteful/folders/${idToUpdate}`)
-          .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+          .patch(`/api/favorites/${idToUpdate}`)
+        //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
           .send({ irrelevantField: 'foo' })
           .expect(400, {
             error: {
@@ -289,14 +289,14 @@ describe('Favorites Endpoint', function () {
         };
 
         return supertest(app)
-          .patch(`/api/noteful/folders/${idToUpdate}`)
-          .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+          .patch(`/api/favorites/${idToUpdate}`)
+        //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
           .send({...updateFolder, fieldToIgnore: 'should not be in GET response'})
           .expect(204)
           .then(res => {
             return supertest(app)
-              .get(`/api/noteful/folders/${idToUpdate}`)
-              .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+              .get(`/api/favorites/${idToUpdate}`)
+            //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
               .expect(expectedFavorite)
           });
       });

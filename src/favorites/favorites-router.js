@@ -1,13 +1,11 @@
 const express = require("express");
 const xss = require("xss");
 const { logger } = require("../logger");
-const {
-  savedProps,
-} = require("../mockData");
+const { savedProps } = require("../mockData");
 const FavoritesService = require("./FavoritesService");
 
 const favoritesRouter = express.Router();
-const knex = (req) => req.app.get('db');
+const knex = (req) => req.app.get("db");
 
 const serializeData = (favorite) => ({
   id: favorite.id,
@@ -24,26 +22,42 @@ const serializeData = (favorite) => ({
     bedrooms: Number(xss(favorite.property.bedrooms)),
     bathrooms: Number(xss(favorite.property.bathrooms)),
     price: Number(xss(favorite.property.price)),
-    yearBuilt: Number((favorite.property.yearBuilt)),
+    yearBuilt: Number(favorite.property.yearBuilt),
     longitude: Number(xss(favorite.property.longitude)),
     latitude: Number(xss(favorite.property.latitude)),
     description: xss(favorite.property.description),
     livingArea: Number(xss(favorite.property.livingArea)),
     currency: xss(favorite.property.currency),
     url: xss(favorite.property.url),
-    photos: favorite.property.photos.map(url => xss(url)),
+    photos: favorite.property.photos.map((url) => xss(url)),
   },
 });
 
 favoritesRouter.route("/favorites").get((req, res, next) => {
   FavoritesService.getAllFavorites(knex(req))
-    .then(favorites => {
-      res
-        .status(200)
-        .json(favorites.map(serializeData))
+    .then((favorites) => {
+      res.status(200).json(favorites.map(serializeData));
     })
-    .catch(next)
+    .catch(next);
+});
 
+favoritesRouter.route("/favorites/:id").all((req, res, next) => {
+  const id = req.params.id;
+  FavoritesService.getById(knex(req), id)
+    .then((favorite) => {
+      if (!favorite) {
+        return res.status(404).json({
+          error: { message: "Property does not exist" },
+        });
+      }
+      res.favorite = favorite;
+      next();
+    })
+    .catch(next);
+});
+
+favoritesRouter.route("/favorites/:id").get((req, res, next) => {
+  res.json(serializeData(res.favorite));
 });
 
 module.exports = favoritesRouter;
