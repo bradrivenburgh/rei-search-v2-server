@@ -5,6 +5,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const helmet = require("helmet");
 const searchRouter = require('./search/search-router');
+const favoritesRouter = require('./favorites/favorites-router');
 const {
   NODE_ENV,
   CLIENT_ORIGIN,
@@ -61,6 +62,7 @@ app.use(express.json());
 // app.use(validateBearerToken); // Enable after adding validation
 // Routers can go here
 app.use("/api/", searchRouter)
+app.use("/api/", favoritesRouter)
 app.use(errorHandler);
 
 /** Route Handlers */
