@@ -110,7 +110,7 @@ describe('Favorites Endpoint', function () {
         });
       });
 
-      it(`responds with 200 and the specified folder`, () => {
+      it(`responds with 200 and the specified property`, () => {
         const id = 1;
         const expectedFavorite = testFavorites[id - 1];
         return supertest(app)
@@ -166,7 +166,7 @@ describe('Favorites Endpoint', function () {
       });
     });
 
-    context.only(`Given an XSS attack favorite`, () => {
+    context(`Given an XSS attack favorite`, () => {
       let { maliciousFavorite, expectedFavorite } = makeMaliciousFavorite();
 
       it("removes XSS attack content", () => {
@@ -202,10 +202,10 @@ describe('Favorites Endpoint', function () {
           .insert(testFavorites)
       });
 
-      it('responds with 204 and removes the folder', () => {
+      it('responds with 204 and removes the property', () => {
         const idToRemove = 2;
         const expectedFavorites = testFavorites
-          .filter(folder => folder.id !== idToRemove);
+          .filter(favorite => favorite.id !== idToRemove);
         return supertest(app)
           .delete(`/api/favorites/${idToRemove}`)
         //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)

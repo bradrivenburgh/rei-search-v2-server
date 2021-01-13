@@ -2,7 +2,8 @@ const path = require('path');
 const express = require("express");
 const xss = require("xss");
 const { logger } = require("../logger");
-const { savedProps } = require("../mockData");
+const { ValidationService } = require('../ValidationService');
+const { requiredFavoritesDictionary } = require("../callerValidationData");
 const FavoritesService = require("./FavoritesService");
 
 const favoritesRouter = express.Router();
@@ -47,21 +48,21 @@ favoritesRouter
   .post((req, res, next) => {
     const newFavorite = req.body;
     // // VALIDATE
-    // const missingAndInvalidProps = ValidationService.validateProperties(
-    //   req.body, 
-    //   requiredFolderDictionary
-    // );
+    const missingAndInvalidProps = ValidationService.validateProperties(
+      req.body, 
+      requiredFavoritesDictionary
+    );
     
-    // if (
-    //   missingAndInvalidProps.invalidProps.length ||
-    //   missingAndInvalidProps.missingProps.length
-    // ) {
-    //   const validationErrorObj = ValidationService.createValidationErrorObject(
-    //     missingAndInvalidProps
-    //   );
-    //   logger.error(validationErrorObj.error.message);
-    //   return res.status(400).json(validationErrorObj);
-    // }
+    if (
+      missingAndInvalidProps.invalidProps.length ||
+      missingAndInvalidProps.missingProps.length
+    ) {
+      const validationErrorObj = ValidationService.createValidationErrorObject(
+        missingAndInvalidProps
+      );
+      logger.error(validationErrorObj.error.message);
+      return res.status(400).json(validationErrorObj);
+    }
 
     FavoritesService.insertFavorite(knex(req), newFavorite)
       .then(favorite => {
