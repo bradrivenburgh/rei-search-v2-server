@@ -4,9 +4,9 @@ const FavoritesService = {
       .select('*')
       .from('favorites');
   },
-  insertFavorite(knex, newFolder) {
+  insertFavorite(knex, newFavorite) {
     return knex
-      .insert(newFolder)
+      .insert(newFavorite)
       .into('favorites')
       .returning('*')
       .then(rows => {

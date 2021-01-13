@@ -120,20 +120,22 @@ describe('Favorites Endpoint', function () {
       });
     });
   });
-/*
+
   describe('POST /api/favorites', () => {
-    it('creates a folder, responding with 201 and the new folder', function () {
-      const newFolder = {
-        property: 'Test new folder',
+    const testFavorite = makeFavoritesArray()[0];
+
+    it('creates a favorite, responding with 201 and the new favorite', function () {
+      const newFavorite = {
+        property: testFavorite.property,
       };
 
       return supertest(app)
       .post('/api/favorites')
     //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
-      .send(newFolder)
+      .send(newFavorite)
       .expect(201)
       .expect(res => {
-        expect(res.body.property).to.eql(newFolder.property);
+        expect(res.body.property).to.eql(newFavorite.property);
         expect(res.body).to.have.property('id');
         expect(res.headers.location).to.eql(`/api/favorites/${res.body.id}`);
       })
@@ -147,26 +149,25 @@ describe('Favorites Endpoint', function () {
 
     const requiredFields = ['property'];
     requiredFields.forEach(field => {
-      const newFolder = {
-        property: 'Test new folder',
+      const newFavorite = {
+        property: testFavorite.property,
       };
   
       it(`responds with 400 and an error message when the '${field}' is missing`, () => {
-        delete newFolder[field];
+        delete newFavorite[field];
 
         return supertest(app)
           .post('/api/favorites')
         //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
-          .send(newFolder)
+          .send(newFavorite)
           .expect(400, {
             error: { message: `Required properties are missing: ${field}` }
           });
       });
     });
 
-    context(`Given an XSS attack favorite`, () => {
+    context.only(`Given an XSS attack favorite`, () => {
       let { maliciousFavorite, expectedFavorite } = makeMaliciousFavorite();
-      maliciousFavorite = camelCaseKeys(maliciousFavorite);
 
       it("removes XSS attack content", () => {
         return supertest(app)
@@ -180,8 +181,8 @@ describe('Favorites Endpoint', function () {
       });
     });
   });
-*/
-  describe.only('DELETE /api/favorites/:id', () => {
+
+  describe('DELETE /api/favorites/:id', () => {
     context('given no properties in the favorites table', () => {
       it('responds with 404', () => {
         const id = 123456;

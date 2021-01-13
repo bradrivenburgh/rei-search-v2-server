@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require("express");
 const xss = require("xss");
 const { logger } = require("../logger");
@@ -40,6 +41,39 @@ favoritesRouter.route("/favorites").get((req, res, next) => {
     })
     .catch(next);
 });
+
+favoritesRouter
+  .route('/favorites')
+  .post((req, res, next) => {
+    const newFavorite = req.body;
+    // // VALIDATE
+    // const missingAndInvalidProps = ValidationService.validateProperties(
+    //   req.body, 
+    //   requiredFolderDictionary
+    // );
+    
+    // if (
+    //   missingAndInvalidProps.invalidProps.length ||
+    //   missingAndInvalidProps.missingProps.length
+    // ) {
+    //   const validationErrorObj = ValidationService.createValidationErrorObject(
+    //     missingAndInvalidProps
+    //   );
+    //   logger.error(validationErrorObj.error.message);
+    //   return res.status(400).json(validationErrorObj);
+    // }
+
+    FavoritesService.insertFavorite(knex(req), newFavorite)
+      .then(favorite => {
+        logger.info(`Favorite with the id ${favorite.id} created`);
+        res
+          .status(201)
+          .location(path.posix.join(req.originalUrl, `/${favorite.id}`))
+          .json(serializeData(favorite))
+      })
+      .catch(next);
+  });
+
 
 favoritesRouter.route("/favorites/:id").all((req, res, next) => {
   const id = req.params.id;
