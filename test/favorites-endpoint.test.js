@@ -126,6 +126,7 @@ describe('Favorites Endpoint', function () {
 
     it('creates a favorite, responding with 201 and the new favorite', function () {
       const newFavorite = {
+        id: testFavorite.id,
         property: testFavorite.property,
       };
 
