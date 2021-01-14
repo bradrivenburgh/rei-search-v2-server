@@ -2,5 +2,6 @@ BEGIN;
 
 DROP TABLE IF EXISTS properties;
 DROP TABLE IF EXISTS coordinates;
+DROP TABLE IF EXISTS favorites;
 
 COMMIT;

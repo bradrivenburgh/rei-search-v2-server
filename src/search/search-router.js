@@ -246,7 +246,7 @@ searchRouter.route("/search").get((req, res, next) => {
             SearchService.getProperties(knex(req), searchLocation).then(
               (properties) => {
                 const allProperties = properties;
-                console.log(allProperties)
+
                 return res.json({
                   badRequest,
                   apiStatistics: transformStats(statistics),
