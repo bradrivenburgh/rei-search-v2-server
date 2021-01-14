@@ -29,7 +29,7 @@ describe('Favorites Endpoint', function () {
       it('responds with 200 and an empty list', () => {
         return supertest(app)
           .get('/api/favorites')
-          //// .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+          .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
           .expect(200, []);
       });
     });
@@ -53,7 +53,7 @@ describe('Favorites Endpoint', function () {
         it("removes XSS attack content", () => {
           return supertest(app)
             .get(`/api/favorites`)
-          ////  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+            .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
             .expect(200)
             .expect((res) => {
               const insertedFavorite = res.body[res.body.length - 1];
@@ -65,7 +65,7 @@ describe('Favorites Endpoint', function () {
       it(`responds with 200 and all of the properties`, () => {
         return supertest(app)
           .get('/api/favorites')
-        ////  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+          .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
           .expect(200, testFavorites)
       });
     });
@@ -78,7 +78,7 @@ describe('Favorites Endpoint', function () {
         const id = 123456;
         return supertest(app)
           .get(`/api/favorites/${id}`)
-        //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+          .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
           .expect(404, { error: {  message: `Property does not exist` } });
       });
     });
@@ -102,7 +102,7 @@ describe('Favorites Endpoint', function () {
         it("removes XSS attack content", () => {
           return supertest(app)
             .get(`/api/favorites/${maliciousFavorite.id}`)
-          //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+            .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
             .expect(200)
             .expect((res) => {
               expect(res.body.property).to.eql(expectedFavorite.property)
@@ -115,7 +115,7 @@ describe('Favorites Endpoint', function () {
         const expectedFavorite = testFavorites[id - 1];
         return supertest(app)
           .get(`/api/favorites/${id}`)
-        //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+          .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
           .expect(200, expectedFavorite)
       });
     });
@@ -132,7 +132,7 @@ describe('Favorites Endpoint', function () {
 
       return supertest(app)
       .post('/api/favorites')
-    //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+      .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
       .send(newFavorite)
       .expect(201)
       .expect(res => {
@@ -143,7 +143,7 @@ describe('Favorites Endpoint', function () {
       .then(postRes => {
         return supertest(app)
           .get(`/api/favorites/${postRes.body.id}`)
-        //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+          .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
           .expect(postRes.body)
       });
     });
@@ -160,7 +160,7 @@ describe('Favorites Endpoint', function () {
 
         return supertest(app)
           .post('/api/favorites')
-        //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+          .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
           .send(newFavorite)
           .expect(400, {
             error: { message: `Required properties are missing: ${field}` }
@@ -174,7 +174,7 @@ describe('Favorites Endpoint', function () {
       it("removes XSS attack content", () => {
         return supertest(app)
           .post(`/api/favorites`)
-        //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+          .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
           .send(maliciousFavorite)
           .expect(201)
           .expect((res) => {
@@ -190,7 +190,7 @@ describe('Favorites Endpoint', function () {
         const id = 123456;
         return supertest(app)
           .delete(`/api/favorites/${id}`)
-        //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+          .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
           .expect(404, { error: { message: `Property does not exist` } })
       });
     })
@@ -210,12 +210,12 @@ describe('Favorites Endpoint', function () {
           .filter(favorite => favorite.id !== idToRemove);
         return supertest(app)
           .delete(`/api/favorites/${idToRemove}`)
-        //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+          .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
           .expect(204)
           .then(res => {
             return supertest(app)
               .get('/api/favorites')
-            //  .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
+              .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
               .expect(expectedFavorites)
           });
       });

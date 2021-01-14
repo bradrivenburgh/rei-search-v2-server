@@ -27,6 +27,7 @@ describe("Search Endpoint", function () {
     it("responds with 200 and defaults to statistics and properties in Philadelphia", () => {
       return supertest(app)
         .get("/api/search")
+        .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
         .query('address=""')
         .expect(200)
         .then((res) => {
@@ -59,6 +60,7 @@ describe("Search Endpoint", function () {
   it("responds with properties within 10k of the given coordinates in NJ", () => {
     return supertest(app)
       .get("/api/search")
+      .set("Authorization", `Bearer ${process.env.API_TOKEN}`)
       .query("address=Medford, NJ")
       .expect(200)
       .then((res) => {

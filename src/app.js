@@ -59,7 +59,7 @@ app.use(morgan(morganOption));
 app.use(cors());
 app.use(helmet());
 app.use(express.json());
-// app.use(validateBearerToken); // Enable after adding validation
+app.use(validateBearerToken); // Enable after adding validation
 // Routers can go here
 app.use("/api/", searchRouter)
 app.use("/api/", favoritesRouter)
