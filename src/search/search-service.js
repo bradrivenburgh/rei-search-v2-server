@@ -1,7 +1,7 @@
 const SearchService = {
   getProperties(knex, searchLocation) {
     return knex
-      .select("property")
+      .select("*")
       .from("properties")
       .whereRaw(
         `ST_DistanceSphere(geometry(properties.location),

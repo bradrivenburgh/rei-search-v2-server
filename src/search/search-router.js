@@ -245,13 +245,12 @@ searchRouter.route("/search").get((req, res, next) => {
 
             SearchService.getProperties(knex(req), searchLocation).then(
               (properties) => {
-                const simplifiedArr = properties.map((property) => {
-                  return property.property;
-                });
-                 return res.json({
+                const allProperties = properties;
+                console.log(allProperties)
+                return res.json({
                   badRequest,
                   apiStatistics: transformStats(statistics),
-                  properties: simplifiedArr,
+                  properties: allProperties,
                   msa: phillyMSAGeoJson,
                   county: values[0],
                   tract: values[2],

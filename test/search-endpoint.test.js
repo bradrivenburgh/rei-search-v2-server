@@ -37,8 +37,8 @@ describe("Search Endpoint", function () {
             res.body.apiStatistics.demographic[1]["CT"]
           ).to.have.lengthOf.at.least(1);
           expect(res.body.properties).to.have.lengthOf.at.least(1);
-          expect(res.body.properties[1].address.city).to.equal("Philadelphia");
-          expect(res.body.properties[1].address.state).to.equal("PA");
+          expect(res.body.properties[1].property.address.city).to.equal("Philadelphia");
+          expect(res.body.properties[1].property.address.state).to.equal("PA");
 
           api_response = res;
         });
@@ -64,7 +64,7 @@ describe("Search Endpoint", function () {
       .then((res) => {
         const properties = res.body.properties;
         const state = properties.some(
-          (property) => property.address.state === "NJ"
+          (data) => data.property.address.state === "NJ"
         );
         expect(state).to.equal(true);
       });
