@@ -47,7 +47,7 @@ favoritesRouter
   .route('/favorites')
   .post((req, res, next) => {
     const newFavorite = req.body;
-    // // VALIDATE
+    // VALIDATE
     const missingAndInvalidProps = ValidationService.validateProperties(
       req.body, 
       requiredFavoritesDictionary

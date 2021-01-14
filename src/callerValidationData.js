@@ -8,6 +8,11 @@
           return false;
         }
       },
+      id: (value) => {
+        if (!value) {
+          return false;
+        }
+      }
     };
 
     // Custom validation messages here

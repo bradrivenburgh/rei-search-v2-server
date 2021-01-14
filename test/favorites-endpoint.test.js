@@ -148,9 +148,10 @@ describe('Favorites Endpoint', function () {
       });
     });
 
-    const requiredFields = ['property'];
+    const requiredFields = ['property', 'id'];
     requiredFields.forEach(field => {
       const newFavorite = {
+        id: 1,
         property: testFavorite.property,
       };
   
