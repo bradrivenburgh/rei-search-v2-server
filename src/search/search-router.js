@@ -131,7 +131,7 @@ searchRouter.route("/search").get((req, res, next) => {
             state: geoTags.stateGeoid,
             county: geoTags.countyGeoid,
           },
-          geoResolution: "5m",
+          geoResolution: "20m",
           statsKey: CENSUS_API_KEY,
         };
 
