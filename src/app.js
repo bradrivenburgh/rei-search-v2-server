@@ -14,18 +14,12 @@ const {
 const app = express();
 
 // Create middleware logic
-
-// const allowedOrigins = [CLIENT_ORIGIN, 'http://localhost:3000/']
-// var corsOptions = {
-//   origin: (origin, callback) => {
-//     if (allowedOrigins.indexOf(origin) !== -1) {
-//       callback(null, true)
-//     } else {
-//       callback(new Error('Not allowed by CORS'))
-//     }
-//   }
-// }
-
+const allowedOrigins = [CLIENT_ORIGIN, 'http://localhost:3000']
+console.log(allowedOrigins)
+var corsOptions = {
+  origin: allowedOrigins,
+  optionsSuccessStatus: 200
+}
 // Define morgan options
 const morganOption = NODE_ENV === "production" ? "tiny" : "common";
 
@@ -56,7 +50,7 @@ function errorHandler(error, req, res, next) {
 app.use(morgan(morganOption));
 // Enable cors when wired up to Vercel client
 // app.use(cors(corsOptions));
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(helmet());
 app.use(express.json());
 app.use(validateBearerToken); // Enable after adding validation
