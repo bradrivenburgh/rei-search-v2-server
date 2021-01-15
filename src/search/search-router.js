@@ -8,7 +8,6 @@ const {
   phillyMSAGeoJson,
   defaultCounty,
   defaultTract,
-  savedProps,
 } = require("../mockData");
 const { CENSUS_API_KEY, MAPBOX_API_KEY } = require("../config");
 
