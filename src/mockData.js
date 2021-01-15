@@ -1,129 +1,5 @@
 const { STREETVIEW_API_KEY, STREETVIEW_SIGNATURE } = require("./config"); //Get Google Streetview keys
 
-const fakeStats = {
-  economic: [
-    {
-      statistic: "Price-to-rent ratio",
-      advisory: "(Lower is better)",
-      CT: "18.00",
-      CTY: "18.20",
-      MSA: "18.30",
-    },
-    {
-      statistic: "Median income",
-      CT: "$40,000",
-      CTY: "$40,000",
-      MSA: "$40,000",
-    },
-    {
-      statistic: "Top three sectors",
-      advisory: "(Ordered by percentage of working population employed)",
-      CT: [
-        "Health care and social assistance (19.29%)",
-        "Retail trade (18.29%)",
-        "Accommodation and food services (8.75%)",
-      ],
-      CTY: [
-        "Health care and social assistance (19.29%)",
-        "Retail trade (18.29%)",
-        "Accommodation and food services (8.75%)",
-      ],
-      MSA: [
-        "Health care and social assistance (19.29%)",
-        "Retail trade (18.29%)",
-        "Accommodation and food services (8.75%)",
-      ],
-    },
-    {
-      statistic: "Top three occupations",
-      advisory: "(Ordered by percentage of working population in occupation)",
-      CT: [
-        "Health care and social assistance (19.29%)",
-        "Retail trade (18.29%)",
-        "Accommodation and food services (8.75%)",
-      ],
-      CTY: [
-        "Health care and social assistance (19.29%)",
-        "Retail trade (18.29%)",
-        "Accommodation and food services (8.75%)",
-      ],
-      MSA: [
-        "Health care and social assistance (19.29%)",
-        "Retail trade (18.29%)",
-        "Accommodation and food services (8.75%)",
-      ],
-    },
-  ],
-
-  demographic: [
-    {
-      statistic: "Population growth rate",
-      advisory: "(Higher is better)",
-      CT: "2.18%",
-      CTY: "2.40%",
-      MSA: "2.00%",
-    },
-    {
-      statistic: "Median age",
-      CT: "34",
-      CTY: "35",
-      MSA: "36",
-    },
-    {
-      statistic: "Race and ethnicity",
-      CT: [
-        "American Indian (##%)",
-        "Asian (##%)",
-        "Black (##%)",
-        "Pacific Islander (##%)",
-        "White (##%)",
-      ],
-      CTY: [
-        "American Indian (##%)",
-        "Asian (##%)",
-        "Black (##%)",
-        "Pacific Islander (##%)",
-        "White (##%)",
-      ],
-      MSA: [
-        "American Indian (##%)",
-        "Asian (##%)",
-        "Black (##%)",
-        "Pacific Islander (##%)",
-        "White (##%)",
-      ],
-    },
-    {
-      statistic: "Employment status",
-      CT: ["Employed (##%)", "Unemployed (##%)"],
-      CTY: ["Employed (##%)", "Unemployed (##%)"],
-      MSA: ["Employed (##%)", "Unemployed (##%)"],
-    },
-  ],
-};
-
-const placeholderProfile = {
-  address: {
-    streetAddress: "Placeholder St.",
-    city: "Somewhere",
-    state: "PA",
-    zipcode: "00000",
-    neighborhood: null,
-    community: null,
-    subdivision: null,
-  },
-  bedrooms: "2",
-  bathrooms: "2",
-  price: "200000",
-  yearBuilt: 1980,
-  longitude: -75.10820770263672,
-  latitude: 39.98884201049805,
-  description: "Placeholder description.",
-  livingArea: 1000,
-  currency: "USD",
-  photos: [],
-};
-
 const fakeProps = [
   {
     address: {
@@ -1168,27 +1044,6 @@ const defaultTract = {
   ],
 };
 
-// UPDATE: After updating the arguments for philly tract to get stats and reordering
-// the variables, citysdk now only returns a single tract shape.  I am preserving how to use
-// jq to parse JSON files here just in case it is needed in the future.
-
-// CRITICAL: How to optimize searching this file so it is memory efficient?
-// Create file with just counties in Philly MSA -- e.g., Pennsylvania:
-/*
-    cat src/paTracts.json | jq -c '[.features[] | select ( 
-      .properties.COUNTYFP == "101" or .properties.COUNTYFP == "017" or 
-      .properties.COUNTYFP == "029" or 
-      .properties.COUNTYFP == "091" or 
-      .properties.COUNTYFP == "045")]' > src/paTractsFiltered.json 
-    */
-// Get properties (need to grab just geoid)
-// cat src/tract.json | jq '[.features[] | .properties | .GEOID]' > src/tractProps.geo.json
-// Get coordinates
-// cat src/tract.json | jq '[.features[] | {coordinates:.geometry.coordinates}]' > src/tractCoords.geo.json
-// Minify
-// jq -c . < src/tractCoords.geo.json > src/tractCoordsMinified.geo.json
-// https://nodejs.org/api/fs.html
-
 const singleTractShape = {
   type: "FeatureCollection",
   features: [
@@ -1367,7 +1222,6 @@ const defaultCounty = {
 
 
 module.exports = {
-  fakeStats,
   fakeProps,
   savedProps,
   phillyMSAGeoJson,
