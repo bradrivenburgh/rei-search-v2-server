@@ -32,21 +32,23 @@ searchRouter.route("/search").get((req, res, next) => {
     const endPointURL = `https://api.mapbox.com/geocoding/v5/mapbox.places/${userLocation}.json`;
     const params = {
       limit: 1,
+      country: 'us',
       fuzzyMatch: true,
-      bbox:
-        "-76.23327974765701, 39.290566999999996, -74.389708, 40.608579999999996",
+      // bbox:
+      //   "-76.23327974765701, 39.290566999999996, -74.389708, 40.608579999999996",
       access_token: MAPBOX_API_KEY,
     };
+    let badRequest = false;
 
     const queryString = formatQueryParams(params);
     const url = endPointURL + "?" + queryString;
 
     fetch(url)
       .then((response) => {
-        if (response.ok) {
+        if (response.status >= 200 && response.status < 400) {
           return response.json();
         }
-        throw new Error(response.statusText);
+        return {features: [] }
       })
       .then((data) => {
         let lat, lng;
@@ -54,11 +56,11 @@ searchRouter.route("/search").get((req, res, next) => {
         if (data.features.length === 0) {
           lat = 40.010854;
           lng = -75.126666;
+          badRequest=true;
         } else {
           lat = data.features[0].center[1];
           lng = data.features[0].center[0];  
         }
-
         // Retrieve Census FIPS codes for the given coordinates
 
         return fetch(
@@ -71,8 +73,8 @@ searchRouter.route("/search").get((req, res, next) => {
               throw new Error(response.statusText);
             }
           })
-          .then((data) => {
-            const fipsCodes = data.features[0].attributes;
+          .then((responseJson) => {
+            const fipsCodes = responseJson.features[0].attributes;
             let geoTags = {
               lat,
               lng,
@@ -223,7 +225,6 @@ searchRouter.route("/search").get((req, res, next) => {
               counties.includes(values[1].fipsCodes["COUNTY"]);
 
             // If the request falls outside of MSA
-            let badRequest = false;
             let searchLocation = `${values[1].lng},${values[1].lat}`;
 
             // Check if searched location is in MSA; if not replace with default
