@@ -9,7 +9,8 @@ const SearchService = {
       )
       .limit(50)
       .then((properties) => {
-        return properties;
+        const sortedProperties = properties.sort((a, b) => b.property.price - a.property.price);
+        return sortedProperties;
       });
   },
 };
