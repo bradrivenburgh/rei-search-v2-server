@@ -32,10 +32,9 @@ searchRouter.route("/search").get((req, res, next) => {
     const endPointURL = `https://api.mapbox.com/geocoding/v5/mapbox.places/${userLocation}.json`;
     const params = {
       limit: 1,
-      country: 'us',
       fuzzyMatch: true,
-      // bbox:
-      //   "-76.23327974765701, 39.290566999999996, -74.389708, 40.608579999999996",
+      bbox:
+        "-76.23327974765701, 39.290566999999996, -74.389708, 40.608579999999996",
       access_token: MAPBOX_API_KEY,
     };
     let badRequest = false;
