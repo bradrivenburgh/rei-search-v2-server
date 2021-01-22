@@ -63,7 +63,9 @@ If all went well the API should be deployed and provisioned with your dataset.
 * **Success Response:**
 
   **Code:** 200 <br />
-  **Content**: `[
+  **Content**: 
+  ```
+  [
     {
       id: 1,
       property: {
@@ -94,7 +96,8 @@ If all went well the API should be deployed and provisioned with your dataset.
         ],
       },
     },
-  ]`
+  ]
+  ```
 
 * **Error Response:**
 
@@ -103,13 +106,15 @@ If all went well the API should be deployed and provisioned with your dataset.
 
 * **Sample Call:**
 
-  `fetch('baseUrl/api/search?address=Philadelphia,PA', {
+  ```
+  fetch('baseUrl/api/search?address=Philadelphia,PA', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer [insert api_token here]'
     }
-  })`
+  })
+  ```
 
 <br />
 
@@ -128,7 +133,8 @@ If all went well the API should be deployed and provisioned with your dataset.
 
   `GET`: None <br />
   `POST`: 
-  `{
+  ```
+    {
       id: 1,
       property: {
         address: {
@@ -157,14 +163,17 @@ If all went well the API should be deployed and provisioned with your dataset.
           "https://photos.zillowstatic.com/fp/62ff661fa1557f45ec3c111da9e06e25-p_f.jpg",
         ],
       },
-    }`
+    }
+  ```
   
 * **Success Response:**
 
   `GET`:
 
     **Code:** 200 <br />
-    **Content:** `[
+    **Content:** 
+    ```
+    [
       {
         id: 1,
         property: {
@@ -194,13 +203,15 @@ If all went well the API should be deployed and provisioned with your dataset.
           ],
         },
       },
-    ]`
+    ]
+    ```
   
   `POST`:
 
     **Code:** 201 <br />
     **Content:** 
-    `{
+    ```
+      {
         id: 1,
         property: {
           address: {
@@ -228,43 +239,54 @@ If all went well the API should be deployed and provisioned with your dataset.
             "https://photos.zillowstatic.com/fp/7a1264a3d683bd48ba1a96ec3ff8b5cb-p_f.jpg",
           ],
         },
-      }`
+      }
+    ```
 
 
 * **Error Response:**
 
+  `GET` | `POST`
+
   **Code:** 401 UNAUTHORIZED <br />
   **Content**: `{ error: "Unauthorized request" }`
 
-  OR
+  `POST`
 
   **Code:** 400 BAD REQUEST <br />
-  **Content:** `{ error: { message: `Invalid property values provided: property' } }` <br />
-  OR <br />
-  **Content:** `{ error: { message: 'Required properties are missing: id, property'} }`
+  **Content:**
+
+  `{ error: { message: `Invalid property values provided: property' } }` 
+  
+  OR
+
+  `{ error: { message: 'Required properties are missing: id, property'} }`
 
 * **Sample Calls:**
 
   `GET`:
 
-  `fetch('baseUrl/api/favorites', {
+  ```
+  fetch('baseUrl/api/favorites', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer [insert api_token here]'
     }
-  })`
+  })
+  ```
 
   `POST`:
 
-  `fetch('baseUrl/api/favorites', {
+  ```
+  fetch('baseUrl/api/favorites', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer [insert api_token here]'
     },
     body: {...[see successful response example for object structure]}
-  })`
+  })
+  ```
 
 <br />
 
@@ -284,7 +306,7 @@ If all went well the API should be deployed and provisioned with your dataset.
   
 * **Success Response:**
 
-    **Code:** 204 <br />
+    **Code:** 204 NO CONTENT <br />
     **Content:** None
 
 * **Error Response:**
@@ -299,10 +321,12 @@ If all went well the API should be deployed and provisioned with your dataset.
 
 * **Sample Call:**
 
-  `fetch('baseUrl/api/favorites/1', {
+  ```
+  fetch('baseUrl/api/favorites/1', {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer [insert api_token here]'
     }
-  })`
+  })
+  ```
