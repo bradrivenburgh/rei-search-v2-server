@@ -157,7 +157,7 @@ If all went well the API should be deployed and provisioned with your dataset.
           "https://photos.zillowstatic.com/fp/62ff661fa1557f45ec3c111da9e06e25-p_f.jpg",
         ],
       },
-    },`
+    }`
   
 * **Success Response:**
 
@@ -228,7 +228,7 @@ If all went well the API should be deployed and provisioned with your dataset.
             "https://photos.zillowstatic.com/fp/7a1264a3d683bd48ba1a96ec3ff8b5cb-p_f.jpg",
           ],
         },
-      },`
+      }`
 
 
 * **Error Response:**
