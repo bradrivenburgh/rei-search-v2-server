@@ -45,3 +45,264 @@ Seeding the Heroku database by connecting to your database (`heroku pg:psql`) an
 * `cat /app/property-data/coordinates.json | psql -h <host> -p <port> -d <database> -U <user> -c "COPY properties (property) FROM STDIN;"`
 
 If all went well the API should be deployed and provisioned with your dataset.
+
+## Endpoints
+
+### /api/search
+
+* **Method:**
+
+  `GET`
+
+* **URL Params:**
+
+  **Required:**
+
+  `address=[string]`
+
+* **Success Response:**
+
+  **Code:** 200 <br />
+  **Content**: `[
+    {
+      id: 1,
+      property: {
+        address: {
+          streetAddress: "332 E Somerset St",
+          city: "Philadelphia",
+          state: "PA",
+          zipcode: "19134",
+          neighborhood: null,
+          community: null,
+          subdivision: null,
+        },
+        bedrooms: 3,
+        bathrooms: 1,
+        price: 80000,
+        yearBuilt: 1935,
+        longitude: -75.12525177001953,
+        latitude: 39.99158477783203,
+        description:
+          "Description about property",
+        livingArea: 1065,
+        currency: "USD",
+        url:
+          "https://www.zillow.com/homedetails/332-E-Somerset-St-Philadelphia-PA-19134/10203588_zpid/",
+        photos: [
+          "https://photos.zillowstatic.com/fp/7a1264a3d683bd48ba1a96ec3ff8b5cb-p_f.jpg",
+          "https://photos.zillowstatic.com/fp/62ff661fa1557f45ec3c111da9e06e25-p_f.jpg",
+        ],
+      },
+    },
+  ]`
+
+* **Error Response:**
+
+  **Code:** 401 UNAUTHORIZED <br />
+  **Content:** `{ error: "Unauthorized request" }`
+
+* **Sample Call:**
+
+  `fetch('baseUrl/api/search?address=Philadelphia,PA', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer [insert api_token here]'
+    }
+  })`
+
+<br />
+
+### /api/favorites
+
+* **Method:**
+
+  `GET` | `POST`
+
+* **URL Params:**
+
+  * `GET`: None
+  * `POST`: None
+ 
+* **Data Params:**
+
+  `GET`: None <br />
+  `POST`: 
+  `{
+      id: 1,
+      property: {
+        address: {
+          streetAddress: "332 E Somerset St",
+          city: "Philadelphia",
+          state: "PA",
+          zipcode: "19134",
+          neighborhood: null,
+          community: null,
+          subdivision: null,
+        },
+        bedrooms: 3,
+        bathrooms: 1,
+        price: 80000,
+        yearBuilt: 1935,
+        longitude: -75.12525177001953,
+        latitude: 39.99158477783203,
+        description:
+          "Description about property",
+        livingArea: 1065,
+        currency: "USD",
+        url:
+          "https://www.zillow.com/homedetails/332-E-Somerset-St-Philadelphia-PA-19134/10203588_zpid/",
+        photos: [
+          "https://photos.zillowstatic.com/fp/7a1264a3d683bd48ba1a96ec3ff8b5cb-p_f.jpg",
+          "https://photos.zillowstatic.com/fp/62ff661fa1557f45ec3c111da9e06e25-p_f.jpg",
+        ],
+      },
+    },`
+  
+* **Success Response:**
+
+  `GET`:
+
+    **Code:** 200 <br />
+    **Content:** `[
+      {
+        id: 1,
+        property: {
+          address: {
+            streetAddress: "332 E Somerset St",
+            city: "Philadelphia",
+            state: "PA",
+            zipcode: "19134",
+            neighborhood: null,
+            community: null,
+            subdivision: null,
+          },
+          bedrooms: 3,
+          bathrooms: 1,
+          price: 80000,
+          yearBuilt: 1935,
+          longitude: -75.12525177001953,
+          latitude: 39.99158477783203,
+          description:
+            "Description about property",
+          livingArea: 1065,
+          currency: "USD",
+          url:
+            "https://www.zillow.com/homedetails/332-E-Somerset-St-Philadelphia-PA-19134/10203588_zpid/",
+          photos: [
+            "https://photos.zillowstatic.com/fp/7a1264a3d683bd48ba1a96ec3ff8b5cb-p_f.jpg",
+          ],
+        },
+      },
+    ]`
+  
+  `POST`:
+
+    **Code:** 201 <br />
+    **Content:** 
+    `{
+        id: 1,
+        property: {
+          address: {
+            streetAddress: "332 E Somerset St",
+            city: "Philadelphia",
+            state: "PA",
+            zipcode: "19134",
+            neighborhood: null,
+            community: null,
+            subdivision: null,
+          },
+          bedrooms: 3,
+          bathrooms: 1,
+          price: 80000,
+          yearBuilt: 1935,
+          longitude: -75.12525177001953,
+          latitude: 39.99158477783203,
+          description:
+            "Description about property",
+          livingArea: 1065,
+          currency: "USD",
+          url:
+            "https://www.zillow.com/homedetails/332-E-Somerset-St-Philadelphia-PA-19134/10203588_zpid/",
+          photos: [
+            "https://photos.zillowstatic.com/fp/7a1264a3d683bd48ba1a96ec3ff8b5cb-p_f.jpg",
+          ],
+        },
+      },`
+
+
+* **Error Response:**
+
+  **Code:** 401 UNAUTHORIZED <br />
+  **Content**: `{ error: "Unauthorized request" }`
+
+  OR
+
+  **Code:** 400 BAD REQUEST <br />
+  **Content:** `{ error: { message: `Invalid property values provided: property' } }` <br />
+  OR <br />
+  **Content:** `{ error: { message: 'Required properties are missing: id, property'} }`
+
+* **Sample Calls:**
+
+  `GET`:
+
+  `fetch('baseUrl/api/favorites', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer [insert api_token here]'
+    }
+  })`
+
+  `POST`:
+
+  `fetch('baseUrl/api/favorites', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer [insert api_token here]'
+    },
+    body: {...[see successful response example for object structure]}
+  })`
+
+<br />
+
+### /api/favorites/:id
+
+* **Method:**
+
+  `DELETE`
+
+* **URL Params:**
+
+  * `id=[integer]`
+ 
+* **Data Params:**
+
+  None
+  
+* **Success Response:**
+
+    **Code:** 204 <br />
+    **Content:** None
+
+* **Error Response:**
+
+  **Code:** 401 UNAUTHORIZED <br />
+  **Content**: `{ error: "Unauthorized request" }`
+
+  OR
+
+  **Code:** 404 NOT FOUND <br />
+  **Content:** `{ error: { message: "Property does not exist" } }` <br />
+
+* **Sample Call:**
+
+  `fetch('baseUrl/api/favorites/1', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer [insert api_token here]'
+    }
+  })`
