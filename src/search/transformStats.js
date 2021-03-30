@@ -12,7 +12,6 @@ const transformStats = (statistics) => {
    * Helper function that takes the Census data and a dictionary
    * of Census variable name equivalents and returns the top three
    * by value in descending order.
-   * @param {object} geography
    * @param {object} dictionary
    */
   const getTopThree = (dictionary) => {
