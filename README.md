@@ -65,7 +65,7 @@ If all went well the API should be deployed and provisioned with your dataset.
   **Code:** 200 <br />
   **Content**: 
   ```
-    export const sampleSearchResponse = {
+    {
       badRequest: false,
       apiStatistics: {
         economic: [
