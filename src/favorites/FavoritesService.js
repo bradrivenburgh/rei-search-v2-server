@@ -1,8 +1,9 @@
 const FavoritesService = {
-  getAllFavorites(knex) {
+  getAllFavorites(knex, userId) {
     return knex
       .select('*')
-      .from('favorites');
+      .from('favorites')
+      .where('user_id', userId);
   },
   insertFavorite(knex, newFavorite) {
     return knex

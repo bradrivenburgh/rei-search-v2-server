@@ -7,4 +7,6 @@ module.exports = {
   STREETVIEW_SIGNATURE: process.env.STREETVIEW_SIGNATURE,
   CENSUS_API_KEY: process.env.CENSUS_API_KEY,
   MAPBOX_API_KEY: process.env.MAPBOX_API_KEY,
+  JWT_SECRET: process.env.JWT_SECRET || 'change-this-secret',
+  JWT_EXPIRY: process.env.JWT_EXPIRY || '3h',
 }

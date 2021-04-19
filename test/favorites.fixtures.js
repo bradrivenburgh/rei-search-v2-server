@@ -34,6 +34,7 @@ function makeFavoritesArray() {
           "https://photos.zillowstatic.com/fp/6221c6753da1d27c0bd3b98373863b21-p_f.jpg",
         ],
       },
+      user_id: 1,
     },
     {
       id: 2,
@@ -66,6 +67,7 @@ function makeFavoritesArray() {
           "https://photos.zillowstatic.com/fp/f017ec58e08bb5fdca964bc7590d5446-p_f.jpg",
         ],
       },
+      user_id: 2,
     },
     {
       id: 3,
@@ -97,6 +99,7 @@ function makeFavoritesArray() {
           "https://photos.zillowstatic.com/fp/bf947aa418f6ad34cd73e1d161da7cd2-p_f.jpg",
         ],
       },
+      user_id: 3,
     },
     {
       id: 4,
@@ -126,6 +129,7 @@ function makeFavoritesArray() {
           "https://photos.zillowstatic.com/fp/f2ce07b3ae79f931c6caacc6a537761c-cc_ft_1152.jpg",
         ],
       },
+      user_id: 4,
     },
     {
       id: 5,
@@ -181,6 +185,7 @@ function makeFavoritesArray() {
           "https://photos.zillowstatic.com/fp/dbd5aca9ee916806df8a2f33c839cb22-p_f.jpg",
         ],
       },
+      user_id: 5,
     },
   ];
 }
@@ -241,6 +246,7 @@ function makeMaliciousFavorite() {
         "https://photos.zillowstatic.com/fp/dbd5aca9ee916806df8a2f33c839cb22-p_f.jpg",
       ],
     },
+    user_id: 1,
   }
   const expectedFavorite = {
     ...maliciousFavorite,
@@ -296,6 +302,7 @@ function makeMaliciousFavorite() {
         "https://photos.zillowstatic.com/fp/dbd5aca9ee916806df8a2f33c839cb22-p_f.jpg",
       ],
     },
+    user_id: 1,
   }
   return {
     maliciousFavorite,

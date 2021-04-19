@@ -1,13 +1,14 @@
 const path = require('path');
-const express = require("express");
-const xss = require("xss");
-const { logger } = require("../logger");
+const express = require('express');
+const xss = require('xss');
+const { logger } = require('../logger');
 const { ValidationService } = require('../ValidationService');
-const { requiredFavoritesDictionary } = require("../callerValidationData");
-const FavoritesService = require("./FavoritesService");
+const { requiredFavoritesDictionary } = require('../callerValidationData');
+const FavoritesService = require('./FavoritesService');
+const { requireAuth } = require('../middleware/jwt-auth');
 
 const favoritesRouter = express.Router();
-const knex = (req) => req.app.get("db");
+const knex = (req) => req.app.get('db');
 
 const serializeData = (favorite) => ({
   id: favorite.id,
@@ -33,56 +34,58 @@ const serializeData = (favorite) => ({
     url: xss(favorite.property.url),
     photos: favorite.property.photos.map((url) => xss(url)),
   },
+  user_id: Number(xss(favorite.user_id)),
 });
 
-favoritesRouter.route("/favorites").get((req, res, next) => {
-  FavoritesService.getAllFavorites(knex(req))
+favoritesRouter.get('/favorites', requireAuth, (req, res, next) => {
+  FavoritesService.getAllFavorites(knex(req), req.user.id)
     .then((favorites) => {
       res.status(200).json(favorites.map(serializeData));
     })
     .catch(next);
 });
 
-favoritesRouter
-  .route('/favorites')
-  .post((req, res, next) => {
-    const newFavorite = req.body;
-    // VALIDATE
-    const missingAndInvalidProps = ValidationService.validateProperties(
-      req.body, 
-      requiredFavoritesDictionary
+favoritesRouter.post('/favorites', requireAuth, (req, res, next) => {
+  const newFavorite = req.body;
+  // VALIDATE
+  const missingAndInvalidProps = ValidationService.validateProperties(
+    newFavorite,
+    requiredFavoritesDictionary
+  );
+
+  if (
+    missingAndInvalidProps.invalidProps.length ||
+    missingAndInvalidProps.missingProps.length
+  ) {
+    const validationErrorObj = ValidationService.createValidationErrorObject(
+      missingAndInvalidProps
     );
-    
-    if (
-      missingAndInvalidProps.invalidProps.length ||
-      missingAndInvalidProps.missingProps.length
-    ) {
-      const validationErrorObj = ValidationService.createValidationErrorObject(
-        missingAndInvalidProps
-      );
-      logger.error(validationErrorObj.error.message);
-      return res.status(400).json(validationErrorObj);
-    }
+    logger.error(validationErrorObj.error.message);
+    return res.status(400).json(validationErrorObj);
+  }
 
-    FavoritesService.insertFavorite(knex(req), newFavorite)
-      .then(favorite => {
-        logger.info(`Favorite with the id ${favorite.id} created`);
-        res
-          .status(201)
-          .location(path.posix.join(req.originalUrl, `/${favorite.id}`))
-          .json(serializeData(favorite))
-      })
-      .catch(next);
-  });
+  // Add user id into entry
+  newFavorite.user_id = req.user.id;
 
+  // Insert new entry into the favorites table
+  FavoritesService.insertFavorite(knex(req), newFavorite)
+    .then((favorite) => {
+      logger.info(`Favorite with the id ${favorite.id} created`);
+      res
+        .status(201)
+        .location(path.posix.join(req.originalUrl, `/${favorite.id}`))
+        .json(serializeData(favorite));
+    })
+    .catch(next);
+});
 
-favoritesRouter.route("/favorites/:id").all((req, res, next) => {
+favoritesRouter.all('/favorites/:id', requireAuth, (req, res, next) => {
   const id = req.params.id;
   FavoritesService.getById(knex(req), id)
     .then((favorite) => {
       if (!favorite) {
         return res.status(404).json({
-          error: { message: "Property does not exist" },
+          error: { message: 'Property does not exist' },
         });
       }
       res.favorite = favorite;
@@ -91,11 +94,11 @@ favoritesRouter.route("/favorites/:id").all((req, res, next) => {
     .catch(next);
 });
 
-favoritesRouter.route("/favorites/:id").get((req, res, next) => {
+favoritesRouter.get('/favorites/:id', (req, res, next) => {
   res.json(serializeData(res.favorite));
 });
 
-favoritesRouter.route("/favorites/:id").delete((req, res, next) => {
+favoritesRouter.delete('/favorites/:id', (req, res, next) => {
   const id = req.params.id;
   FavoritesService.deleteFavorite(knex(req), id)
     .then(() => {
