@@ -7,7 +7,7 @@ const FavoritesService = {
   },
   insertFavorite(knex, newFavorite) {
     return knex
-      .insert({id: newFavorite.id, property: newFavorite.property})
+      .insert(newFavorite)  
       .into('favorites')
       .returning('*')
       .then(rows => {

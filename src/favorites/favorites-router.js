@@ -66,6 +66,10 @@ favoritesRouter.post('/favorites', requireAuth, (req, res, next) => {
 
   // Add user id into entry
   newFavorite.user_id = req.user.id;
+  // Delete the distance property which is calculated by the DB
+  // and sent to the client per request but is not part of the
+  // schema
+  delete newFavorite.distance;
 
   // Insert new entry into the favorites table
   FavoritesService.insertFavorite(knex(req), newFavorite)
