@@ -475,3 +475,79 @@ If all went well the API should be deployed and provisioned with your dataset.
     }
   })
   ```
+
+<br />
+
+### /api/auth/login
+
+- **Method:**
+
+`POST`
+
+- **URL Params:**
+
+None
+
+- **Success Response:**
+
+  **Code:** 200 <br />
+  **Content**: `{"authToken":"some.jwt.token"}`
+
+- **Error Response:**
+
+  **Code:** 400 BAD REQUEST <br />
+  **Content:** 
+  * `{ error: "Incorrect user_name or password" }`
+  * `{ error: "Missing '${field}' in request body" }`
+
+
+<br />
+
+### /api/auth/refresh
+
+- **Method:**
+
+`POST`
+
+- **URL Params:**
+
+None
+
+- **Success Response:**
+
+  **Code:** 200 <br />
+  **Content**: `{"authToken":"some.jwt.token"}`
+
+
+<br />
+
+### /api/users
+
+- **Method:**
+
+`POST`
+
+- **URL Params:**
+
+None
+
+- **Success Response:**
+
+  **Code:** 201 <br />
+  **Content**: `{
+      id: 1,
+      first_name: "First",
+      last_name: "Last",
+      user_name: "Test",
+      date_created: "2021-02-19T02:21:18.434Z",
+    }`
+
+- **Error Response:**
+
+  **Code:** 400 BAD REQUEST <br />
+  **Content:** 
+  * `{ error: "Username already taken" }`
+  * `{ error: "Password must be longer than 8 characters" }`
+  * `{ error: "Password must be less than 72 characters" }`
+  * `{ error: "Password must not start or end with empty spaces" }`
+  * `{ error: "Password must contain one upper case, lower case, number and special character" }`
